@@ -1,0 +1,13 @@
+{
+ "title": "Cloudy",
+ "kind": "arrangement",
+ "instrument": "piano",
+ "files": [
+  "index.html",
+  "cloudy-piano.mp3",
+  "cloudy-voice.mp3.locked"
+ ],
+ "key": "B major",
+ "source": "https://claude.ai/artifact/L26FbKBMXk5PMciNapffRy",
+ "addedAt": "2026-11-02T09:30:06Z"
+}

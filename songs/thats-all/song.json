@@ -1,0 +1,13 @@
+{
+ "title": "That’s All",
+ "kind": "arrangement",
+ "instrument": "piano",
+ "files": [
+  "index.html",
+  "thats-all-piano.mp3",
+  "thats-all-voice.mp3.locked"
+ ],
+ "key": "A♭ major",
+ "source": "https://claude.ai/artifact/1bwSv2Hjm4goNH2XRjuwZ3",
+ "addedAt": "2026-11-02T09:25:15Z"
+}

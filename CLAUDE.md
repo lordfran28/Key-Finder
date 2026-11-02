@@ -84,5 +84,6 @@ The same rules as Fret Finder.
 ## Where it stands (2 November 2026)
 
 - Built: the library, the owner page, the song-page look, the import tool and the song-list workflow.
-- No songs and no paintings yet.
-- Not yet: a piano page kit made for the shelf. The arrangement pages bring their own markup, so check the first few against `shelf.css` (see The shelf).
+- 39 songs, built with the tools in `tools/piano/` (see its README).
+- One painting so far: `seated-virginal`. `music-lesson` and `standing-virginal` still need their files; until then the title plate and the owner page show without a painting.
+- Not pushed yet: the repository on GitHub doesn't exist yet.

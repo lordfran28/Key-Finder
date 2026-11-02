@@ -1,0 +1,60 @@
+/* Key Finder's look for the arrangement pages made in conversation.
+   Every colour and typeface on those pages goes through a small set of variables, so this file only has
+   to set them (with !important, so it wins over the page's own values), plus the ground behind the page
+   and the bar at the top: "← Key Finder" over a thin band of piano keys.
+   Keyboard diagrams should draw their keys with --key-white, --key-black and --key-edge, so the black
+   keys stay dark in dark mode instead of turning ivory with the ink. */
+@font-face{font-family:"EB Garamond";font-style:normal;font-weight:400 800;font-display:swap;src:url(fonts/eb-garamond-latin-wght-normal.woff2) format("woff2")}
+@font-face{font-family:"EB Garamond";font-style:italic;font-weight:400 800;font-display:swap;src:url(fonts/eb-garamond-latin-wght-italic.woff2) format("woff2")}
+@font-face{font-family:"IM Fell French Canon";font-style:normal;font-weight:400;font-display:swap;src:url(fonts/im-fell-french-canon-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"IM Fell French Canon";font-style:italic;font-weight:400;font-display:swap;src:url(fonts/im-fell-french-canon-latin-400-italic.woff2) format("woff2")}
+
+:root,#piano,.cp{
+  --bg:#F2EBDD!important;--surface:#FAF6EE!important;--sunk:#EEE6D7!important;--ink:#211B16!important;--muted:#6A5D4F!important;--faint:#8C7D6A!important;--line:#D6C8B0!important;
+  --accent:#2D4A7F!important;--accent-ink:#FAF6EE!important;--accent-soft:#DFE5EF!important;--pass:#8A3A1F!important;--land:#3D6B34!important;
+  --brass:#8C6414!important;--brass-soft:#F2E8D2!important;
+  --roll:#E9E0CF!important;--tone:#8C7D6A!important;--hit:#DFE5EF!important;--runbg:#F3EEE3!important;
+  --display:"IM Fell French Canon",Garamond,"Times New Roman",serif!important;
+  --body:"EB Garamond",Garamond,Georgia,serif!important;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace!important;
+  --font-display:"IM Fell French Canon",Garamond,"Times New Roman",serif!important;
+  --font-body:"EB Garamond",Garamond,Georgia,serif!important;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace!important;
+  --paper:#FAF6EE!important;--rule:#D6C8B0!important;--rule-strong:#B5A387!important;
+  --voice:#8A3A1F!important;--voice-soft:#F3E2D8!important;--bass:#2D4A7F!important;--bass-soft:#DFE5EF!important;--now:#EFE2C0!important;
+  --key-white:#FBF8F1!important;--key-edge:#C9BA9E!important;--key-black:#1E1915!important;
+  --kf-key-black-hi:#5A4F45;--kf-key-rail:#2B231D;--kf-key-shade:rgba(43,35,29,.13);--kf-glow:rgba(255,251,242,.85);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root,#piano,.cp{
+    --bg:#13110E!important;--surface:#1B1814!important;--sunk:#221E19!important;--ink:#EDE4D2!important;--muted:#B0A38D!important;--faint:#857A68!important;--line:#3A3229!important;
+    --accent:#A9BCE4!important;--accent-ink:#13110E!important;--accent-soft:#1F2738!important;--pass:#E39A72!important;--land:#8CC58A!important;
+    --brass:#E2BD6B!important;--brass-soft:#2A2316!important;
+    --roll:#221E19!important;--tone:#857A68!important;--hit:#26304A!important;--runbg:#1E1A15!important;
+    --paper:#1B1814!important;--rule:#3A3229!important;--rule-strong:#5A4E40!important;
+    --voice:#E39A72!important;--voice-soft:#3A251B!important;--bass:#A9BCE4!important;--bass-soft:#1F2738!important;--now:#3A3220!important;
+    --key-white:#BDB29D!important;--key-edge:#7E7462!important;--key-black:#0B0A08!important;
+    --kf-key-black-hi:#3D362D;--kf-key-rail:#050403;--kf-key-shade:rgba(0,0,0,.3);--kf-glow:rgba(44,39,32,.7);
+    color-scheme:dark;
+  }
+}
+html{background:var(--bg)!important}
+body{background:transparent!important;font-family:var(--body)!important;font-size:17px!important}
+html::before{content:"";position:fixed;inset:0 0 auto 0;height:70vh;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 60% 100% at 50% 0%,var(--kf-glow),transparent 70%)}
+/* Garamond runs small; the page's small labels come up a little */
+h1,h2,h3,.pt{font-weight:400!important;letter-spacing:.005em}
+svg text{font-family:var(--body)}
+
+/* The bar at the top: back to the songs, over the keys */
+.kf-shelf{box-sizing:border-box;max-width:952px;margin:0 auto;padding:16px 16px 0;display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 14px}
+.kf-shelf a{font:400 1.32rem/1.1 var(--display);color:var(--accent);text-decoration:none;text-shadow:0 1px 0 rgba(255,252,244,.75),0 2px 3px rgba(30,40,70,.18);opacity:.82;transition:opacity .3s ease}
+.kf-shelf a:hover,.kf-shelf a:focus-visible{opacity:1}
+.kf-shelf .kf-mark{font:italic 400 1.05rem var(--display);color:var(--muted)}
+.kf-keys{flex:1 0 100%;position:relative;overflow:hidden;height:13px;margin-top:9px;border-top:2px solid var(--kf-key-rail);opacity:.92}
+.kf-keys i{position:absolute;top:0;bottom:0;left:50%;width:max(100%,416px);transform:translateX(-50%);
+  background:linear-gradient(to right,var(--key-edge) 1px,transparent 1px) 0 0/calc(100% / 52) 100% repeat-x,var(--key-white)}
+.kf-keys i::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,var(--kf-key-shade),transparent 45%)}
+.kf-keys i::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,var(--key-black) 0,var(--key-black) 51%,var(--kf-key-black-hi) 63%);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 10' preserveAspectRatio='none'%3E%3Crect x='0.83' width='.58' height='6.3'/%3E%3Crect x='2.59' width='.58' height='6.3'/%3E%3Crect x='3.77' width='.58' height='6.3'/%3E%3Crect x='5.58' width='.58' height='6.3'/%3E%3Crect x='6.71' width='.58' height='6.3'/%3E%3Crect x='7.83' width='.58' height='6.3'/%3E%3Crect x='9.59' width='.58' height='6.3'/%3E%3Crect x='10.77' width='.58' height='6.3'/%3E%3Crect x='12.58' width='.58' height='6.3'/%3E%3Crect x='13.71' width='.58' height='6.3'/%3E%3Crect x='14.83' width='.58' height='6.3'/%3E%3Crect x='16.59' width='.58' height='6.3'/%3E%3Crect x='17.77' width='.58' height='6.3'/%3E%3Crect x='19.58' width='.58' height='6.3'/%3E%3Crect x='20.71' width='.58' height='6.3'/%3E%3Crect x='21.83' width='.58' height='6.3'/%3E%3Crect x='23.59' width='.58' height='6.3'/%3E%3Crect x='24.77' width='.58' height='6.3'/%3E%3Crect x='26.58' width='.58' height='6.3'/%3E%3Crect x='27.71' width='.58' height='6.3'/%3E%3Crect x='28.83' width='.58' height='6.3'/%3E%3Crect x='30.59' width='.58' height='6.3'/%3E%3Crect x='31.77' width='.58' height='6.3'/%3E%3Crect x='33.58' width='.58' height='6.3'/%3E%3Crect x='34.71' width='.58' height='6.3'/%3E%3Crect x='35.83' width='.58' height='6.3'/%3E%3Crect x='37.59' width='.58' height='6.3'/%3E%3Crect x='38.77' width='.58' height='6.3'/%3E%3Crect x='40.58' width='.58' height='6.3'/%3E%3Crect x='41.71' width='.58' height='6.3'/%3E%3Crect x='42.83' width='.58' height='6.3'/%3E%3Crect x='44.59' width='.58' height='6.3'/%3E%3Crect x='45.77' width='.58' height='6.3'/%3E%3Crect x='47.58' width='.58' height='6.3'/%3E%3Crect x='48.71' width='.58' height='6.3'/%3E%3Crect x='49.83' width='.58' height='6.3'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 10' preserveAspectRatio='none'%3E%3Crect x='0.83' width='.58' height='6.3'/%3E%3Crect x='2.59' width='.58' height='6.3'/%3E%3Crect x='3.77' width='.58' height='6.3'/%3E%3Crect x='5.58' width='.58' height='6.3'/%3E%3Crect x='6.71' width='.58' height='6.3'/%3E%3Crect x='7.83' width='.58' height='6.3'/%3E%3Crect x='9.59' width='.58' height='6.3'/%3E%3Crect x='10.77' width='.58' height='6.3'/%3E%3Crect x='12.58' width='.58' height='6.3'/%3E%3Crect x='13.71' width='.58' height='6.3'/%3E%3Crect x='14.83' width='.58' height='6.3'/%3E%3Crect x='16.59' width='.58' height='6.3'/%3E%3Crect x='17.77' width='.58' height='6.3'/%3E%3Crect x='19.58' width='.58' height='6.3'/%3E%3Crect x='20.71' width='.58' height='6.3'/%3E%3Crect x='21.83' width='.58' height='6.3'/%3E%3Crect x='23.59' width='.58' height='6.3'/%3E%3Crect x='24.77' width='.58' height='6.3'/%3E%3Crect x='26.58' width='.58' height='6.3'/%3E%3Crect x='27.71' width='.58' height='6.3'/%3E%3Crect x='28.83' width='.58' height='6.3'/%3E%3Crect x='30.59' width='.58' height='6.3'/%3E%3Crect x='31.77' width='.58' height='6.3'/%3E%3Crect x='33.58' width='.58' height='6.3'/%3E%3Crect x='34.71' width='.58' height='6.3'/%3E%3Crect x='35.83' width='.58' height='6.3'/%3E%3Crect x='37.59' width='.58' height='6.3'/%3E%3Crect x='38.77' width='.58' height='6.3'/%3E%3Crect x='40.58' width='.58' height='6.3'/%3E%3Crect x='41.71' width='.58' height='6.3'/%3E%3Crect x='42.83' width='.58' height='6.3'/%3E%3Crect x='44.59' width='.58' height='6.3'/%3E%3Crect x='45.77' width='.58' height='6.3'/%3E%3Crect x='47.58' width='.58' height='6.3'/%3E%3Crect x='48.71' width='.58' height='6.3'/%3E%3Crect x='49.83' width='.58' height='6.3'/%3E%3C/svg%3E") 0 0/100% 100% no-repeat}
+@media (prefers-color-scheme: dark){.kf-shelf a{text-shadow:0 1px 0 rgba(0,0,0,.6)}}

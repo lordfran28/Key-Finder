@@ -9,4 +9,4 @@ How the voice-and-piano pages on the shelf were made. Nothing here runs on the s
 - `build.py SLUG` does all of it for one song and writes `out/SLUG/`; `--no-audio` rewrites only the page. The singer's track is the guitar artifact's vocal mix with the guitar taken out, and goes up locked.
 - `faure.py` is Après un rêve, taken note for note from the OpenScore Lieder score (CC0) instead of from a guitar page.
 - `import_all.sh SLUG ...` puts built songs on the shelf with `tools/import_arrangement.py`.
-- `design.py` makes the site's velvet (light and dark) from the Met velvet in Valve Finder's `assets/source`; `heroes.py DIR` cuts the title paintings of all three sites (Traballesi, Watteau's *Mezzetin*, Dou's *Trumpet Player*) from the originals in DIR.
+- `design.py` makes the site's velvet (light and dark) from the Met velvet in Valve Finder's `assets/source`; `heroes.py DIR` cuts the title paintings of all three sites (Ragueneau's harpsichordist, Watteau's *Mezzetin*, Dou's *Trumpet Player*) from the originals in DIR.

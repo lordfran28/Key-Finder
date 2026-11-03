@@ -2,7 +2,7 @@
 
 The sister of Fret Finder and Valve Finder, for the piano. It holds the voice-and-piano arrangements we make together. Each song has its own page, with keyboard diagrams in place of sheet music.
 
-It will be live at **https://lordfran28.github.io/key-finder/** once GitHub Pages is on (Settings → Pages → Deploy from a branch → `main`, `/ (root)`).
+It lives at **https://lordfran28.github.io/Key-Finder/**. GitHub Pages serves it from `main`, `/ (root)` (Settings → Pages → Deploy from a branch).
 
 ## Songs
 
@@ -10,7 +10,7 @@ Each song is a folder in `songs/` holding its page, its audio and a small `song.
 
 ## The singer key
 
-It's the same key as Fret Finder's. A phone or computer that already has it on Fret Finder has it here too. To put it on another device, open the owner page (`…/key-finder/#owner`) and paste it, or scan *Connect your phone* from a device that already has it.
+It's the same key as Fret Finder's. A phone or computer that already has it on Fret Finder has it here too. To put it on another device, open the owner page (`…/Key-Finder/#owner`) and paste it, or scan *Connect your phone* from a device that already has it.
 
 ## Paintings
 

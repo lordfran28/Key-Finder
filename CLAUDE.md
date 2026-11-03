@@ -43,7 +43,7 @@ These come from his own corrections over many arrangements (on guitar, piano and
 
   `python3 tools/import_arrangement.py PAGE.html SLUG "Title" --key "E♭ major" --source ARTIFACT-URL --file NAME=PATH ... [--locked NAME.mp3.locked=PATH ...] [--drop-alt]`
 
-  It adds Key Finder's look (`assets/shelf.css`, which only sets the page's colour and type variables), a bar at the top ("← Key Finder", the key and "voice and piano", over a thin band of piano keys), and `assets/voice.js` first thing in `<head>`; it marks the buttons of locked tracks `data-locked`. Running it again on the same slug replaces the page and keeps the date and key.
+  It adds Key Finder's look (`assets/shelf.css`, which only sets the page's colour and type variables), a bar at the top like Fret Finder's ("← Key Finder", then the key and "voice and piano"), and `assets/voice.js` first thing in `<head>`; it marks the buttons of locked tracks `data-locked`. Running it again on the same slug replaces the page and keeps the date and key.
 - `.github/scripts/song_index.py` lists every such folder in `songs/index.json`. The *Song list* workflow runs it on every push that touches `songs/`. Run it locally too before committing, so the list is right at once.
 - The library lists the songs A to Z with the key and "voice and piano" under each title, and links straight to the page. A search box appears from six songs up. It has no way to add a song.
 - Titles of classical pieces start with the composer: "Bach – Prelude and Fugue, BWV 867". The library sets the composer in small capitals.
@@ -60,17 +60,13 @@ The same rules as Fret Finder.
 - The key is kept in the browser under `ff.voicekey`, the same name as Fret Finder. Both sites are served from lordfran28.github.io, the same origin, so entering it on either owner page puts it on both, and removing it on one removes it on both. Anything Key Finder stores for itself takes a `kf.` prefix so the two sites never step on each other.
 - The owner page (`#owner`) has only the singer key and *Connect your phone*: a QR code for the link `#connect=` + base64url of `{"v": KEY}`. Opening that link checks the key against `voice-check.locked`, saves it, and replaces the address with `#owner` so the key doesn't stay in the address bar or the history.
 
-## Paintings
+## Look and paintings
 
-- Paintings go in `assets/art` as `<name>-light.webp` and `<name>-dark.webp`. The slots are `music-lesson` (the title plate), `seated-virginal` (closes the song list) and `standing-virginal` (closes the owner page).
-- A slot shows only once its file has loaded, so a missing painting leaves no broken image. In dark mode a missing dark file falls back to the light one. A painting is credited in the footer only when its file is there; the credits come from the `ART` list in `index.html`, so a new painting needs a line there.
-- The title plate is built like a virginal: the painting is its lid and a full 88-key keyboard runs along its foot. On a computer the painting sits on the right, faded into the plate under the title; on a phone it sits above the title. `--focus` on the figure sets which part of the painting stays in view.
-- Only real, public-domain paintings, photographs and historical pieces. Never newly drawn or generated imagery: the owner says it looks AI-made. The keyboard band is the one drawn ornament, and it stays plain.
-
-## Look
-
-- "Exquisite refinement but modest." Ivory and ebony, with Vermeer's ultramarine as the accent (Fret Finder has madder red, Valve Finder brass). EB Garamond and IM Fell French Canon, served from `assets/fonts`. Light and dark follow the device.
-- No textile behind the page (the sister sites have damask silk); the keys are this site's mark.
+- **The same design as Fret Finder and Valve Finder, with a slight variance.** The owner wants the three to read as brothers. Same layout, type and pieces: one music-stand column; a framed title (eyebrow "For the piano", the name, a short line) with a Vermeer cut into a 17th-century silk on the right; a faint silk behind the whole page; songs on parchment cards; the owner page with "← Songs"; credits at the foot over a band of the same silk. When a sister site changes its look, follow it here.
+- The variance is the colour and the pictures. Fret Finder is madder red, Valve Finder brass; Key Finder is ivory and ebony with Vermeer's ultramarine. Its silk is a 17th-century Italian velvet (The Met 229429) recoloured blue on ivory and blue on ebony; its title painting is Vermeer's *Lady Seated at a Virginal*. `tools/piano/design.py` makes both.
+- EB Garamond and IM Fell French Canon, served from `assets/fonts`. Light and dark follow the device.
+- Still to come: the faint paintings that stand behind the songs on the sister sites (Fret Finder's Baroque guitarists, Valve Finder's trumpeters). Here they will be players at keyboards, once their files are in.
+- Only real, public-domain paintings, photographs and historical pieces. Never newly drawn or generated imagery: the owner says it looks AI-made.
 - Phone first: it must work at 390 px wide with no sideways scroll.
 
 ## How work is done here
@@ -85,5 +81,5 @@ The same rules as Fret Finder.
 
 - Built: the library, the owner page, the song-page look, the import tool and the song-list workflow.
 - 39 songs, built with the tools in `tools/piano/` (see its README).
-- One painting so far: `seated-virginal`. `music-lesson` and `standing-virginal` still need their files; until then the title plate and the owner page show without a painting.
+- The look now matches the sister sites (see Look and paintings).
 - Live at https://lordfran28.github.io/Key-Finder/ (repository lordfran28/Key-Finder, Pages from `main`, root).

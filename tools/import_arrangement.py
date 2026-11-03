@@ -65,7 +65,7 @@ def main():
     mark = mark[:1].upper() + mark[1:]
     shelf = '<link rel="stylesheet" href="../../assets/shelf.css">'
     bar = ('<header class="kf-shelf"><a href="../../">&larr; Key Finder</a><span class="kf-mark">%s</span>'
-           '<div class="kf-keys" aria-hidden="true"><i></i></div></header>' % htmllib.escape(mark))
+           '</header>' % htmllib.escape(mark))
     html = html.replace(shelf, "")
     html = re.sub(r'<header class="(?:kf|ff)-shelf">.*?</header>', "", html, flags=re.S)
     html = html.replace('<script src="../../assets/ring.js" defer></script>', "")

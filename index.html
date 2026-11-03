@@ -4,286 +4,180 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Key Finder</title>
-<meta name="theme-color" content="#F2EBDD" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#13110E" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#EFE8DA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12110F" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Songs for voice and piano, laid out on the keys.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='6' y='8' width='36' height='32' rx='2' fill='%23FBF8F1' stroke='%232D4A7F' stroke-width='2.5'/%3E%3Cpath d='M18 8v32M30 8v32' stroke='%232D4A7F' stroke-width='2'/%3E%3Crect x='14.5' y='8' width='7' height='19' fill='%232D4A7F'/%3E%3Crect x='26.5' y='8' width='7' height='19' fill='%232D4A7F'/%3E%3C/svg%3E">
 <link rel="preload" href="assets/fonts/eb-garamond-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/im-fell-french-canon-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script src="assets/voice.js"></script>
-<script>
-/* Paintings live in assets/art as <name>-light.webp and <name>-dark.webp. A slot shows only once its
-   file has loaded, so a painting that isn't there yet leaves no trace; in dark mode a missing dark file
-   falls back to the light one. */
-window.kfArt = {
-  load: function (img) {
-    var f = img.closest(".art"); if (!f) return;
-    f.classList.add("on");
-    var host = f.closest("[data-art-host]"); if (host) host.classList.add("with-art");
-    if (window.kfCredits) window.kfCredits();
-  },
-  fail: function (img) {
-    var s = img.parentNode && img.parentNode.querySelector("source");
-    if (s && /-dark\.webp/.test(img.currentSrc || s.srcset)) s.parentNode.removeChild(s);
-  }
-};
-</script>
 <style>
 @font-face{font-family:"EB Garamond";font-style:normal;font-weight:400 800;font-display:swap;src:url("assets/fonts/eb-garamond-latin-wght-normal.woff2") format("woff2")}
 @font-face{font-family:"EB Garamond";font-style:italic;font-weight:400 800;font-display:swap;src:url("assets/fonts/eb-garamond-latin-wght-italic.woff2") format("woff2")}
 @font-face{font-family:"IM Fell French Canon";font-style:normal;font-weight:400;font-display:swap;src:url("assets/fonts/im-fell-french-canon-latin-400-normal.woff2") format("woff2")}
 @font-face{font-family:"IM Fell French Canon";font-style:italic;font-weight:400;font-display:swap;src:url("assets/fonts/im-fell-french-canon-latin-400-italic.woff2") format("woff2")}
-/* The piano sister of Fret Finder and Valve Finder. Ivory and ebony, with Vermeer's ultramarine for the
-   accent. The title plate is built like a virginal: the painting is its lid, and a full 88-key keyboard
-   runs along its foot. The songs are a programme, A to Z. */
+/* The piano sister of Fret Finder and Valve Finder, built the same way: one music-stand column, a framed
+   hero that sets Vermeer's Lady Seated at a Virginal into a 17th-century Italian velvet, songs on parchment
+   cards, and a band of the same velvet closing the page. Fret Finder is madder red, Valve Finder brass;
+   Key Finder is ivory and ebony with Vermeer's ultramarine. */
 :root{
-  --bg:#F2EBDD;--surface:#FAF6EE;--well:#EEE6D7;--ink:#211B16;--muted:#6A5D4F;--line:#D6C8B0;--line-strong:#B5A387;
+  --bg:#EFE8DA;--surface:#FAF6EE;--well:#EEE6D7;--ink:#211B16;--muted:#655A4D;--line:#D4C7B0;
   --accent:#2D4A7F;--accent-hi:#3B5D9B;--accent-soft:#DFE5EF;
   --warn:#9C3424;--warn-soft:#F6DFD7;
-  --veil:rgba(242,235,221,.95);
-  --key-white:#FBF8F1;--key-edge:#C9BA9E;--key-black:#1E1915;--key-black-hi:#5A4F45;--key-rail:#2B231D;--key-shade:rgba(43,35,29,.13);
-  --emboss:0 1px 0 rgba(255,252,244,.75),0 2px 3px rgba(30,40,70,.18);
-  --emboss-lift:0 1px 0 rgba(255,252,244,.85),0 3px 7px rgba(30,40,70,.28);
-  --glow:rgba(255,251,242,.85);
+  --veil:rgba(239,232,218,.94);
+  --emboss:0 1px 0 rgba(255,252,244,.7),0 2px 3px rgba(25,35,65,.2);
+  --emboss-lift:0 1px 0 rgba(255,252,244,.8),0 3px 7px rgba(25,35,65,.3);
+  --textile:url("assets/textile-light.jpg");--textile-alpha:.12;--hero-alpha:.6;
   --display:"IM Fell French Canon",Garamond,"Times New Roman",serif;
   --body:"EB Garamond",Garamond,"Garamond Premier Pro",Georgia,serif;
-  --keys:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 10' preserveAspectRatio='none'%3E%3Crect x='0.83' width='.58' height='6.3'/%3E%3Crect x='2.59' width='.58' height='6.3'/%3E%3Crect x='3.77' width='.58' height='6.3'/%3E%3Crect x='5.58' width='.58' height='6.3'/%3E%3Crect x='6.71' width='.58' height='6.3'/%3E%3Crect x='7.83' width='.58' height='6.3'/%3E%3Crect x='9.59' width='.58' height='6.3'/%3E%3Crect x='10.77' width='.58' height='6.3'/%3E%3Crect x='12.58' width='.58' height='6.3'/%3E%3Crect x='13.71' width='.58' height='6.3'/%3E%3Crect x='14.83' width='.58' height='6.3'/%3E%3Crect x='16.59' width='.58' height='6.3'/%3E%3Crect x='17.77' width='.58' height='6.3'/%3E%3Crect x='19.58' width='.58' height='6.3'/%3E%3Crect x='20.71' width='.58' height='6.3'/%3E%3Crect x='21.83' width='.58' height='6.3'/%3E%3Crect x='23.59' width='.58' height='6.3'/%3E%3Crect x='24.77' width='.58' height='6.3'/%3E%3Crect x='26.58' width='.58' height='6.3'/%3E%3Crect x='27.71' width='.58' height='6.3'/%3E%3Crect x='28.83' width='.58' height='6.3'/%3E%3Crect x='30.59' width='.58' height='6.3'/%3E%3Crect x='31.77' width='.58' height='6.3'/%3E%3Crect x='33.58' width='.58' height='6.3'/%3E%3Crect x='34.71' width='.58' height='6.3'/%3E%3Crect x='35.83' width='.58' height='6.3'/%3E%3Crect x='37.59' width='.58' height='6.3'/%3E%3Crect x='38.77' width='.58' height='6.3'/%3E%3Crect x='40.58' width='.58' height='6.3'/%3E%3Crect x='41.71' width='.58' height='6.3'/%3E%3Crect x='42.83' width='.58' height='6.3'/%3E%3Crect x='44.59' width='.58' height='6.3'/%3E%3Crect x='45.77' width='.58' height='6.3'/%3E%3Crect x='47.58' width='.58' height='6.3'/%3E%3Crect x='48.71' width='.58' height='6.3'/%3E%3Crect x='49.83' width='.58' height='6.3'/%3E%3C/svg%3E");
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --bg:#13110E;--surface:#1B1814;--well:#221E19;--ink:#EDE4D2;--muted:#B0A38D;--line:#3A3229;--line-strong:#5A4E40;
+    --bg:#12110F;--surface:#1B1915;--well:#23201B;--ink:#EDE4D2;--muted:#B0A38D;--line:#383128;
     --accent:#A9BCE4;--accent-hi:#C6D4F0;--accent-soft:#1F2738;
     --warn:#EE9A85;--warn-soft:#3B221D;
-    --veil:rgba(19,17,14,.94);
-    --key-white:#BDB29D;--key-edge:#7E7462;--key-black:#0B0A08;--key-black-hi:#3D362D;--key-rail:#050403;--key-shade:rgba(0,0,0,.3);
+    --veil:rgba(18,17,15,.93);
     --emboss:0 1px 0 rgba(0,0,0,.6),0 0 6px rgba(169,188,228,.12);
     --emboss-lift:0 1px 0 rgba(0,0,0,.7),0 0 12px rgba(169,188,228,.3);
-    --glow:rgba(40,35,29,.55);
+    --textile:url("assets/textile-dark.jpg");--textile-alpha:.4;--hero-alpha:.9;
     color-scheme:dark;
   }
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{background:var(--bg);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{position:relative;z-index:0;margin:0;background:var(--bg);color:var(--ink);font:400 1.1rem/1.55 var(--body);overflow-x:hidden;
+body{position:relative;z-index:0;margin:0;background:var(--bg);color:var(--ink);font:400 1.08rem/1.55 var(--body);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 0}
-/* lamplight from above */
-body::before{content:"";position:fixed;inset:0 0 auto 0;height:75vh;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 75% 100% at 50% 0%,var(--glow) 0%,transparent 100%)}
-.wrap{max-width:44rem;margin:0 auto;display:flex;flex-direction:column;gap:26px}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:var(--textile) center/cover no-repeat;opacity:var(--textile-alpha)}
+.wrap{max-width:48rem;margin:0 auto;display:flex;flex-direction:column;gap:18px}
 .view{display:flex;flex-direction:column;gap:16px}
 h1,h2,h3{font-family:var(--display);font-weight:400;margin:0;text-wrap:balance;letter-spacing:.005em}
-h2{font-size:1.85rem;line-height:1.1}
+h1{font-size:clamp(2.5rem,9vw,3.4rem);line-height:.95}
+h2{font-size:1.75rem;line-height:1.1}
+h3{font-size:1.25rem;line-height:1.15}
 a{color:var(--accent)}
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0;margin:-1px}
-a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-/* The keyboard: 88 keys. On a narrow screen the middle of the piano shows, the keys never smaller than --kmin. */
-.keys{position:relative;overflow:hidden;height:var(--kh,32px);border-top:var(--rail,4px) solid var(--key-rail)}
-.keys i{position:absolute;top:0;bottom:0;left:50%;width:max(100%,calc(52 * var(--kmin,12px)));transform:translateX(-50%);
-  background:linear-gradient(to right,var(--key-edge) 1px,transparent 1px) 0 0/calc(100% / 52) 100% repeat-x,var(--key-white)}
-.keys i::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,var(--key-shade),transparent 40%)}
-.keys i::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(to bottom,var(--key-black) 0,var(--key-black) 51%,var(--key-black-hi) 63%);
-  -webkit-mask:var(--keys) 0 0/100% 100% no-repeat;mask:var(--keys) 0 0/100% 100% no-repeat}
-
-/* Paintings */
-.art{display:none;margin:0}
-.art.on{display:block}
-.art img{display:block;width:100%;height:auto}
-
-/* The title plate */
-.hero{position:relative;overflow:hidden;isolation:isolate;background:var(--surface);border:1px solid var(--line);display:flex;flex-direction:column}
+/* Hero */
+.hero{position:relative;overflow:hidden;isolation:isolate;height:27rem;background:var(--bg);border:1px solid var(--line)}
 .hero::after{content:"";position:absolute;inset:5px;border:1px solid var(--line);pointer-events:none;z-index:4}
-.stage{position:relative;flex:1}
-.hero-title{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:3.4rem 1.5rem 2.6rem;color:var(--ink);text-decoration:none}
-.eyebrow{font-variant-caps:all-small-caps;letter-spacing:.14em;font-size:1.08rem;color:var(--accent);font-weight:600;line-height:1}
-h1{font-size:clamp(2.8rem,12vw,3.9rem);line-height:.92;white-space:nowrap}
-.motto{margin:0;font-style:italic;color:var(--muted);font-size:1.12rem;line-height:1.3}
-.hero .keys{margin:0 6px 6px;--kh:34px}
-.hero-art{position:absolute;inset:6px 6px 0 6px;z-index:0;overflow:hidden}
-.hero-art.on{display:block}
-.hero-art picture{display:block;width:100%;height:100%}
-.hero-art img{width:100%;height:100%;object-fit:cover;object-position:var(--focus,50% 35%);
-  -webkit-mask-image:linear-gradient(to bottom,#000 50%,transparent 92%);mask-image:linear-gradient(to bottom,#000 50%,transparent 92%)}
-.hero-veil{display:none;position:absolute;inset:0;z-index:1;background:linear-gradient(to top,var(--veil) 0%,var(--veil) 26%,transparent 56%)}
-.with-art .stage{min-height:27rem}
-.with-art .hero-veil{display:block}
-.with-art .hero-title{position:absolute;left:0;right:0;bottom:0;align-items:flex-start;text-align:left;gap:7px;padding:1.4rem 1.5rem 1.35rem}
-@media (min-width:640px){
-  .hero-title{padding:4rem 2rem 3rem}
-  .hero .keys{--kh:38px}
-  .with-art .stage{min-height:24rem}
-  .with-art .hero-art{left:43%}
-  .hero-art img{-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 32%);mask-image:linear-gradient(to right,transparent 0%,#000 32%)}
-  .with-art .hero-veil{background:radial-gradient(ellipse 72% 88% at 0% 100%,var(--veil) 0%,var(--veil) 36%,transparent 72%)}
-  .with-art .hero-title{right:auto;max-width:22rem;padding:1.8rem 2rem 1.8rem}
+.hero-silk{position:absolute;inset:0;background:var(--textile) 30% 30%/max(150%,40rem) auto no-repeat;opacity:var(--hero-alpha)}
+.hero-fig{position:absolute;right:-16%;top:-4%;height:84%;width:auto;max-width:none;
+  -webkit-mask-image:radial-gradient(ellipse 52% 58% at 52% 48%,#000 50%,transparent 100%);
+  mask-image:radial-gradient(ellipse 52% 58% at 52% 48%,#000 50%,transparent 100%)}
+.hero-veil{position:absolute;inset:0;background:linear-gradient(to top,var(--veil) 0%,var(--veil) 30%,transparent 52%)}
+.hero-title{position:absolute;left:1.35rem;right:1.35rem;bottom:1.3rem;display:flex;flex-direction:column;gap:6px;color:var(--ink);text-decoration:none;z-index:3}
+@media (min-width:600px){
+  .hero{height:24rem}
+  .hero-fig{right:-4%;top:-5%;height:114%;
+    -webkit-mask-image:radial-gradient(ellipse 46% 56% at 54% 48%,#000 42%,transparent 100%);
+    mask-image:radial-gradient(ellipse 46% 56% at 54% 48%,#000 42%,transparent 100%)}
+  .hero-veil{background:radial-gradient(ellipse 70% 85% at 0% 100%,var(--veil) 0%,var(--veil) 38%,transparent 72%)}
+  .hero-title{right:auto;max-width:22rem;bottom:1.8rem;left:1.8rem}
 }
-/* Off the library, the plate folds down to its name and its keys */
-.on-owner .hero .stage{min-height:0}
-.on-owner .hero-art,.on-owner .hero-veil,.on-owner .eyebrow,.on-owner .motto{display:none!important}
-.on-owner .hero-title{position:relative;align-items:flex-start;text-align:left;padding:1.1rem 1.4rem 1rem}
-.on-owner h1{font-size:2.1rem}
-.on-owner .hero .keys{--kh:22px;--rail:3px}
+.eyebrow{font-variant-caps:all-small-caps;letter-spacing:.12em;font-size:1.05rem;color:var(--accent);font-weight:600;line-height:1}
+.lede{margin:0;font-style:italic;color:var(--muted);font-size:1.08rem;line-height:1.3}
 
-/* The songs */
-.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.search{font:inherit;font-size:1.05rem;color:var(--ink);background:var(--well);border:1px solid var(--line);border-radius:3px;padding:7px 11px;width:100%;min-width:0}
-.search::placeholder{color:var(--muted);font-style:italic;opacity:.85}
-.songlist{list-style:none;margin:0;padding:0;border-top:3px double var(--line-strong);border-bottom:1px solid var(--line-strong)}
-.songlist li + li{border-top:1px solid var(--line)}
-.song{display:flex;flex-direction:column;gap:1px;padding:13px 8px 12px;color:var(--ink);text-decoration:none;-webkit-tap-highlight-color:transparent;transition:background-color .5s ease}
-.song:hover,.song:focus-visible{background:var(--surface)}
-.song-title{font:400 1.4rem/1.15 var(--display);overflow-wrap:anywhere;transition:color .4s ease}
-.song:hover .song-title,.song:focus-visible .song-title{color:var(--accent)}
-.song-title .composer{font-variant-caps:small-caps;letter-spacing:.04em;color:var(--accent)}
-.song-meta{font-style:italic;font-size:1rem;color:var(--muted);font-variant-numeric:lining-nums}
-.empty{margin:0;padding:2.4rem 1rem 2.2rem;text-align:center;border-top:3px double var(--line-strong);border-bottom:1px solid var(--line-strong)}
-.empty p{margin:0;font:italic 400 1.45rem/1.2 var(--display);color:var(--muted)}
-.small{margin:0;font-size:1rem;color:var(--muted)}
-.error{margin:0;background:var(--warn-soft);color:var(--warn);border-radius:3px;padding:9px 13px}
-
-/* A painting set in a mount, closing a page */
-.plate{width:min(100%,21rem);margin:14px auto 0}
-.plate.on{display:flex;flex-direction:column;align-items:center;gap:9px}
-.plate picture{display:block;padding:9px;background:var(--surface);border:1px solid var(--line);box-shadow:0 1px 0 var(--surface),0 8px 22px -12px rgba(30,25,20,.35)}
-.plate img{border:1px solid var(--line)}
-.plate figcaption{font-style:italic;font-size:.98rem;color:var(--muted);text-align:center}
-
-/* Owner page: the singer key */
-.back{align-self:flex-start;font-weight:600;text-decoration:none;font-variant-caps:all-small-caps;letter-spacing:.08em;font-size:1.12rem}
-.panel{position:relative;background:var(--surface);border:1px solid var(--line);padding:20px 20px 18px;display:flex;flex-direction:column;gap:14px}
-.panel::after{content:"";position:absolute;inset:4px;border:1px solid var(--line);pointer-events:none}
-.panel > *{position:relative;z-index:1}
-.panel-body{display:flex;flex-direction:column;gap:12px}
+/* Library */
+.songlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.song{display:flex;flex-direction:column;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:12px 14px;color:var(--ink);text-decoration:none}
+.song:hover{border-color:var(--accent)}
+.song-title{font-family:var(--display);font-size:1.35rem;line-height:1.15;overflow-wrap:anywhere}
+.song-title .composer{font-variant-caps:small-caps;letter-spacing:.03em}
+.song-meta{font-size:.95rem;color:var(--muted);font-variant-numeric:lining-nums}
+.empty{background:var(--surface);border:1px solid var(--line);outline:1px solid var(--line);outline-offset:3px;border-radius:2px;padding:20px;margin:4px}
+input[type=password],input[type=search]{font:inherit;font-size:1.02rem;color:var(--ink);background:var(--well);border:1px solid var(--line);border-radius:3px;padding:7px 10px;width:100%;min-width:0}
+input::placeholder{color:var(--muted)}
 .field{display:flex;flex-direction:column;gap:4px;min-width:0}
-.field label{font-size:1rem;color:var(--muted);font-variant-caps:all-small-caps;letter-spacing:.08em}
-.field input{font:inherit;font-size:1.02rem;color:var(--ink);background:var(--well);border:1px solid var(--line);border-radius:3px;padding:7px 10px;width:100%;min-width:0}
-.btnrow{display:flex;gap:8px 20px;flex-wrap:wrap;align-items:center}
+.field > label{font-size:.98rem;color:var(--muted);font-variant-caps:all-small-caps;letter-spacing:.08em}
+.error{margin:0;background:var(--warn-soft);color:var(--warn);border-radius:3px;padding:10px 14px}
+.small{margin:0;font-size:.98rem;color:var(--muted)}
+
+/* Owner page */
+.songbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.back{font-weight:600;text-decoration:none;font-variant-caps:all-small-caps;letter-spacing:.08em;font-size:1.1rem}
+.panel-body{display:flex;flex-direction:column;gap:12px}
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:2.6rem;padding:4px 2px;cursor:pointer;border:0;border-radius:0;
-  font:400 1.32rem/1.1 var(--display);color:var(--accent);text-decoration:none;user-select:none;-webkit-tap-highlight-color:transparent;
+  font:400 1.3rem/1.1 var(--display);color:var(--accent);text-decoration:none;user-select:none;-webkit-tap-highlight-color:transparent;
   background:linear-gradient(currentColor,currentColor) left calc(100% - 6px)/0 1px no-repeat;
-  text-shadow:var(--emboss);opacity:.72;transition:opacity .7s ease,background-size .7s ease,text-shadow .7s ease,color .4s ease}
+  text-shadow:var(--emboss);opacity:.68;
+  transition:opacity .7s ease,background-size .7s ease,text-shadow .7s ease,color .4s ease}
 .btn:hover,.btn:focus-visible,.btn[aria-expanded="true"]{opacity:1;background-size:100% 1px;text-shadow:var(--emboss-lift)}
 .btn:active{opacity:.85}
 .btn.primary{font-size:1.55rem}
-.btn.link{font-size:1.12rem;color:var(--muted)}
+.btn.link{font-size:1.1rem;color:var(--muted)}
 .btn.link:hover{color:var(--warn)}
 .btn[disabled]{opacity:.4;cursor:progress}
+.btnrow{display:flex;gap:10px 20px;flex-wrap:wrap;align-items:center}
 .pairbox{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
 .qr{width:13.5rem;max-width:100%;background:#fff;padding:10px;border:1px solid var(--line);border-radius:3px}
 .qr svg{display:block;width:100%;height:auto}
-.msg{margin:0;font-size:1.02rem;background:var(--well);border-radius:3px;padding:8px 12px}
+.msg{margin:0;font-size:1rem;background:var(--well);border-radius:3px;padding:8px 12px}
 .msg.bad{background:var(--warn-soft);color:var(--warn)}
 
 /* Footer */
-.foot{display:flex;flex-direction:column;gap:12px;padding-bottom:28px;margin-top:10px}
-.foot .keys{--kh:14px;--rail:2px;--kmin:8px;opacity:.9}
-.credits{margin:0;font-style:italic;font-size:1rem;line-height:1.45;color:var(--muted);text-align:center;text-wrap:balance}
-.credits span{white-space:nowrap}
+.foot{font-size:.98rem;color:var(--muted);display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:16px}
+.foot p{margin:0;max-width:64ch}
+.credits{font-style:italic}
+.silk-band{height:6rem;margin:28px calc(-1 * max(16px, env(safe-area-inset-right,0px))) 0 calc(-1 * max(16px, env(safe-area-inset-left,0px)));background:var(--textile) center 70%/cover no-repeat;opacity:var(--hero-alpha);
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 75%);mask-image:linear-gradient(to bottom,transparent,#000 75%)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="hero" data-art-host>
-    <div class="stage">
-      <figure class="art hero-art" style="--focus:38% 40%">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="assets/art/music-lesson-dark.webp">
-          <img src="assets/art/music-lesson-light.webp" alt="Vermeer, The Music Lesson" onload="kfArt.load(this)" onerror="kfArt.fail(this)">
-        </picture>
-      </figure>
-      <div class="hero-veil" aria-hidden="true"></div>
-      <a class="hero-title" href="#">
-        <span class="eyebrow">For the piano</span>
-        <h1>Key Finder</h1>
-        <p class="motto" lang="la">Musica letitiæ comes medicina dolorum</p>
-      </a>
-    </div>
-    <div class="keys" aria-hidden="true"><i></i></div>
+  <header class="hero">
+    <div class="hero-silk" aria-hidden="true"></div>
+    <img class="hero-fig" src="assets/virginal-vermeer.jpg" width="670" height="670" alt="A young woman at a virginal, from Vermeer's Lady Seated at a Virginal">
+    <div class="hero-veil" aria-hidden="true"></div>
+    <a class="hero-title" href="#">
+      <span class="eyebrow">For the piano</span>
+      <h1>Key Finder</h1>
+      <span class="lede">The keys under every word you sing.</span>
+    </a>
   </header>
 
   <section id="view-library" class="view" aria-label="Songs">
-    <div id="searchwrap" hidden><label for="search" class="vh">Search the songs</label><input id="search" class="search" type="search" placeholder="Search" autocomplete="off" spellcheck="false"></div>
-    <ul id="songlist" class="songlist" hidden></ul>
-    <p id="nomatch" class="small" hidden>No song by that name.</p>
-    <div id="empty" class="empty" hidden><p>Nothing yet</p></div>
     <p id="libmsg" class="error" role="alert" hidden></p>
-    <figure class="art plate">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="assets/art/seated-virginal-dark.webp">
-        <img src="assets/art/seated-virginal-light.webp" alt="Vermeer, Lady Seated at a Virginal" onload="kfArt.load(this)" onerror="kfArt.fail(this)">
-      </picture>
-      <figcaption>Vermeer, Lady Seated at a Virginal</figcaption>
-    </figure>
+    <div id="searchwrap" class="field" hidden><label for="search" class="vh">Search the songs</label><input id="search" type="search" placeholder="Search" autocomplete="off" spellcheck="false"></div>
+    <ul id="songlist" class="songlist" hidden></ul>
+    <p id="nomatch" class="small" hidden>No songs match that search.</p>
+    <div id="empty" class="empty" hidden><h3>Nothing here yet</h3></div>
   </section>
 
   <section id="view-owner" class="view" aria-labelledby="owner-h" hidden>
-    <a href="#" class="back">← Songs</a>
-    <div class="panel">
-      <h2 id="owner-h">Singers</h2>
-      <p id="voicestate" class="small"></p>
-      <div id="voiceform" class="panel-body">
-        <div class="field"><label for="voicekeyin">Singer key</label><input id="voicekeyin" type="password" autocomplete="off" spellcheck="false"></div>
-        <div class="btnrow"><button type="button" id="voicesave" class="btn primary">Save</button></div>
-      </div>
-      <div id="voicedone" class="btnrow" hidden>
-        <button type="button" id="pair" class="btn" aria-expanded="false" aria-controls="pairbox">Connect your phone</button>
-        <button type="button" id="voiceoff" class="btn link">Remove it from this device</button>
-      </div>
-      <div id="pairbox" class="pairbox" hidden>
-        <div id="qr" class="qr" role="img" aria-label="QR code that puts the singer key on your phone"></div>
-        <p class="small">Scan it with your phone's camera. Only show it to your own phone.</p>
-      </div>
-      <p id="msg" class="msg" role="status" hidden></p>
+    <div class="songbar"><a href="#" class="back">← Songs</a></div>
+    <h2 id="owner-h">Singers</h2>
+    <p id="voicestate" class="small"></p>
+    <div id="voiceform" class="panel-body">
+      <div class="field"><label for="voicekeyin">Singer key</label><input id="voicekeyin" type="password" autocomplete="off" spellcheck="false"></div>
+      <div class="btnrow"><button type="button" id="voicesave" class="btn primary">Save</button></div>
     </div>
-    <figure class="art plate">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="assets/art/standing-virginal-dark.webp">
-        <img src="assets/art/standing-virginal-light.webp" alt="Vermeer, Lady Standing at a Virginal" onload="kfArt.load(this)" onerror="kfArt.fail(this)">
-      </picture>
-      <figcaption>Vermeer, Lady Standing at a Virginal</figcaption>
-    </figure>
+    <div id="voicedone" class="btnrow" hidden>
+      <button type="button" id="pair" class="btn" aria-expanded="false" aria-controls="pairbox">Connect your phone</button>
+      <button type="button" id="voiceoff" class="btn link">Remove it from this device</button>
+    </div>
+    <div id="pairbox" class="pairbox" hidden>
+      <div id="qr" class="qr" role="img" aria-label="QR code that puts the singer key on your phone"></div>
+      <p class="small">Scan it with your phone's camera. Only show it to your own phone.</p>
+    </div>
+    <p id="msg" class="msg" role="status" hidden></p>
   </section>
 
   <footer class="foot">
-    <div class="keys" aria-hidden="true"><i></i></div>
-    <p id="credits" class="credits"></p>
+    <p class="credits">Vermeer, <a href="https://en.wikipedia.org/wiki/Lady_Seated_at_a_Virginal" target="_blank" rel="noopener">Lady Seated at a Virginal</a> · Italian velvet, <a href="https://www.metmuseum.org/art/collection/search/229429" target="_blank" rel="noopener">The Met</a> · Piano recordings, <a href="https://github.com/Tonejs/audio" target="_blank" rel="noopener">Salamander Grand Piano</a> by Alexander Holm</p>
+    <p class="credits">For the guitar, <a href="https://lordfran28.github.io/Fret-Finder/">Fret Finder</a> · For the trumpet, <a href="https://lordfran28.github.io/Valve-Finder/">Valve Finder</a></p>
   </footer>
 </div>
+<div class="silk-band" aria-hidden="true"></div>
 
 <script>
 (function(){
 "use strict";
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
-
-/* ---------- Credits: a painting is credited once its file is on the site ---------- */
-var ART = [
-  ["music-lesson", "Vermeer", "The Music Lesson", "https://en.wikipedia.org/wiki/The_Music_Lesson"],
-  ["seated-virginal", "Vermeer", "Lady Seated at a Virginal", "https://en.wikipedia.org/wiki/Lady_Seated_at_a_Virginal"],
-  ["standing-virginal", "Vermeer", "Lady Standing at a Virginal", "https://en.wikipedia.org/wiki/Lady_Standing_at_a_Virginal"]
-];
-var SISTERS = '<span>For the guitar, <a href="https://lordfran28.github.io/Fret-Finder/">Fret Finder</a></span> · <span>For the trumpet, <a href="https://lordfran28.github.io/Valve-Finder/">Valve Finder</a></span>';
-/* paintings grouped by painter on the first line; the sister sites on the second */
-function credits(){
-  var shown = {};
-  Array.prototype.forEach.call(document.querySelectorAll(".art.on img"), function(img){
-    var m = /assets\/art\/([a-z0-9-]+?)-(?:light|dark)\.webp/.exec(img.currentSrc || img.src); if (m) shown[m[1]] = 1;
-  });
-  var by = [], lines = [];
-  ART.forEach(function(a){
-    if (!shown[a[0]]) return;
-    var g = by.filter(function(x){ return x.who === a[1]; })[0];
-    if (!g){ g = {who: a[1], works: []}; by.push(g); }
-    g.works.push('<a href="' + esc(a[3]) + '" target="_blank" rel="noopener">' + esc(a[2]) + "</a>");
-  });
-  by.forEach(function(g){ lines.push(g.works.map(function(w, i){ return "<span>" + (i ? "" : esc(g.who) + ", ") + w + "</span>"; }).join(" · ")); });
-  lines.push(SISTERS);
-  $("credits").innerHTML = lines.join("<br>");
-}
-window.kfCredits = credits;
 
 /* ---------- The songs ---------- */
 var songs = null;
@@ -365,7 +259,6 @@ function takeConnect(h){
 
 /* ---------- Views ---------- */
 function showView(v){
-  document.body.classList.toggle("on-owner", v === "owner");
   $("view-library").hidden = v !== "library";
   $("view-owner").hidden = v !== "owner";
   window.scrollTo(0, 0);
@@ -397,7 +290,6 @@ $("voiceoff").addEventListener("click", function(){
 });
 $("pair").addEventListener("click", showPair);
 window.addEventListener("hashchange", route);
-credits();
 route();
 })();
 </script>

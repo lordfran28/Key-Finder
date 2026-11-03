@@ -14,11 +14,11 @@ It's the same key as Fret Finder's. A phone or computer that already has it on F
 
 ## The look
 
-The same as Fret Finder and Valve Finder: a framed title with a Vermeer set into a 17th-century silk, songs on parchment cards, and a band of the same silk at the foot. Fret Finder is red, Valve Finder brass; Key Finder is ivory and ebony with Vermeer's blue. `tools/piano/design.py` made the velvet (`assets/textile-light.jpg`, `assets/textile-dark.jpg`) and the title painting (`assets/virginal-vermeer.jpg`).
+The same as Fret Finder and Valve Finder: a framed title with an old painting of a man playing the instrument, set into a 17th-century silk, songs on parchment cards, and a band of the same silk at the foot. Fret Finder is red, Valve Finder brass; Key Finder is ivory and ebony with Vermeer's blue. `tools/piano/design.py` made the velvet (`assets/textile-light.jpg`, `assets/textile-dark.jpg`); `tools/piano/heroes.py` cut the title painting (`assets/virginal-traballesi.jpg`).
 
 ## Credits
 
-- Johannes Vermeer, *Lady Seated at a Virginal*, The National Gallery, London. Public domain.
+- Francesco Traballesi, *Portrait of a Man Playing a Virginal* (c. 1565), Rijksmuseum, Amsterdam, SK-A-503. Public domain.
 - Velvet panel, Italian, 17th century, The Metropolitan Museum of Art, [229429](https://www.metmuseum.org/art/collection/search/229429). Public domain (Met Open Access). Mirrored and recoloured: blue on ivory, and blue on ebony.
 - Piano sound: the Salamander Grand Piano by Alexander Holm, CC BY 3.0.
 - EB Garamond and IM Fell French Canon, under the SIL Open Font License (the licences are in `assets/fonts`). QR codes by qrcode-generator (MIT).

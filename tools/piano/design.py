@@ -1,11 +1,10 @@
 """Key Finder's damask and title painting, made the way the sister sites made theirs.
 Damask: Italian velvet panel, 17th century, The Met 229429 (open access), a black-and-white photograph,
 mirrored into a wider piece and recoloured: ultramarine on ivory for light, blue on ebony for dark.
-Title painting: Vermeer's Lady Seated at a Virginal (National Gallery, London), cut around the lady and the keys."""
+The title paintings are cut by heroes.py."""
 import sys
 from PIL import Image, ImageOps, ImageFilter
 SRC_TEX = '/home/claude/valve-finder/assets/source/met-229429-velvet-panel-italian-17c.jpg'
-SRC_FIG = sys.argv[1]
 OUT = '/home/claude/key-finder/assets/'
 
 g = Image.open(SRC_TEX).convert('L').crop((70, 90, 770, 1090))   # the woven part, without the cut edge and the label
@@ -25,6 +24,4 @@ def duotone(L, ground, pattern, gamma=1.0):
 duotone(tile, (238, 233, 223), (84, 108, 160), 1.15).save(OUT + 'textile-light.jpg', quality=84, optimize=True, progressive=True)
 duotone(tile, (17, 16, 15), (44, 60, 98), 1.0).save(OUT + 'textile-dark.jpg', quality=84, optimize=True, progressive=True)
 
-fig = Image.open(SRC_FIG).convert('RGB').crop((290, 300, 960, 970))
-fig.save(OUT + 'virginal-vermeer.jpg', quality=88, optimize=True, progressive=True)
-print('textile', tile.size, 'figure', fig.size)
+print('textile', tile.size)

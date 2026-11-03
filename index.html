@@ -17,7 +17,7 @@
 @font-face{font-family:"IM Fell French Canon";font-style:normal;font-weight:400;font-display:swap;src:url("assets/fonts/im-fell-french-canon-latin-400-normal.woff2") format("woff2")}
 @font-face{font-family:"IM Fell French Canon";font-style:italic;font-weight:400;font-display:swap;src:url("assets/fonts/im-fell-french-canon-latin-400-italic.woff2") format("woff2")}
 /* The piano sister of Fret Finder and Valve Finder, built the same way: one music-stand column, a framed
-   hero that sets Vermeer's Lady Seated at a Virginal into a 17th-century Italian velvet, songs on parchment
+   hero that sets Traballesi's young man at a virginal into a 17th-century Italian velvet, songs on parchment
    cards, and a band of the same velvet closing the page. Fret Finder is madder red, Valve Finder brass;
    Key Finder is ivory and ebony with Vermeer's ultramarine. */
 :root{
@@ -64,16 +64,17 @@ input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(-
 .hero{position:relative;overflow:hidden;isolation:isolate;height:27rem;background:var(--bg);border:1px solid var(--line)}
 .hero::after{content:"";position:absolute;inset:5px;border:1px solid var(--line);pointer-events:none;z-index:4}
 .hero-silk{position:absolute;inset:0;background:var(--textile) 30% 30%/max(150%,40rem) auto no-repeat;opacity:var(--hero-alpha)}
-.hero-fig{position:absolute;right:-16%;top:-4%;height:84%;width:auto;max-width:none;
-  -webkit-mask-image:radial-gradient(ellipse 52% 58% at 52% 48%,#000 50%,transparent 100%);
-  mask-image:radial-gradient(ellipse 52% 58% at 52% 48%,#000 50%,transparent 100%)}
-.hero-veil{position:absolute;inset:0;background:linear-gradient(to top,var(--veil) 0%,var(--veil) 30%,transparent 52%)}
+.hero-fig{position:absolute;right:4%;top:2%;height:62%;width:auto;max-width:none;
+  /* the player's hands sit at the left edge of the canvas, so the painting fades at its edges, not from its middle */
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 90%,transparent),linear-gradient(to bottom,transparent,#000 6%,#000 93%,transparent);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent,#000 7%,#000 90%,transparent),linear-gradient(to bottom,transparent,#000 6%,#000 93%,transparent);
+  mask-composite:intersect}
+.hero-veil{position:absolute;inset:0;background:linear-gradient(to top,var(--veil) 0%,var(--veil) 28%,transparent 44%)}
 .hero-title{position:absolute;left:1.35rem;right:1.35rem;bottom:1.3rem;display:flex;flex-direction:column;gap:6px;color:var(--ink);text-decoration:none;z-index:3}
 @media (min-width:600px){
   .hero{height:24rem}
-  .hero-fig{right:-4%;top:-5%;height:114%;
-    -webkit-mask-image:radial-gradient(ellipse 46% 56% at 54% 48%,#000 42%,transparent 100%);
-    mask-image:radial-gradient(ellipse 46% 56% at 54% 48%,#000 42%,transparent 100%)}
+  .hero-fig{right:3%;top:1%;height:98%}
   .hero-veil{background:radial-gradient(ellipse 70% 85% at 0% 100%,var(--veil) 0%,var(--veil) 38%,transparent 72%)}
   .hero-title{right:auto;max-width:22rem;bottom:1.8rem;left:1.8rem}
 }
@@ -130,7 +131,7 @@ input::placeholder{color:var(--muted)}
 <div class="wrap">
   <header class="hero">
     <div class="hero-silk" aria-hidden="true"></div>
-    <img class="hero-fig" src="assets/virginal-vermeer.jpg" width="670" height="670" alt="A young woman at a virginal, from Vermeer's Lady Seated at a Virginal">
+    <img class="hero-fig" src="assets/virginal-traballesi.jpg" width="1014" height="1300" alt="A young man playing a virginal, from Francesco Traballesi's portrait">
     <div class="hero-veil" aria-hidden="true"></div>
     <a class="hero-title" href="#">
       <span class="eyebrow">For the piano</span>
@@ -167,7 +168,7 @@ input::placeholder{color:var(--muted)}
   </section>
 
   <footer class="foot">
-    <p class="credits">Vermeer, <a href="https://en.wikipedia.org/wiki/Lady_Seated_at_a_Virginal" target="_blank" rel="noopener">Lady Seated at a Virginal</a> · Italian velvet, <a href="https://www.metmuseum.org/art/collection/search/229429" target="_blank" rel="noopener">The Met</a> · Piano recordings, <a href="https://github.com/Tonejs/audio" target="_blank" rel="noopener">Salamander Grand Piano</a> by Alexander Holm</p>
+    <p class="credits">Traballesi, <a href="https://www.rijksmuseum.nl/en/collection/SK-A-503" target="_blank" rel="noopener">Portrait of a Man Playing a Virginal</a> · Italian velvet, <a href="https://www.metmuseum.org/art/collection/search/229429" target="_blank" rel="noopener">The Met</a> · Piano recordings, <a href="https://github.com/Tonejs/audio" target="_blank" rel="noopener">Salamander Grand Piano</a> by Alexander Holm</p>
     <p class="credits">For the guitar, <a href="https://lordfran28.github.io/Fret-Finder/">Fret Finder</a> · For the trumpet, <a href="https://lordfran28.github.io/Valve-Finder/">Valve Finder</a></p>
   </footer>
 </div>

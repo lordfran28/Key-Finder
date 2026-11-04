@@ -29,9 +29,14 @@ def limit_tips(A):
             for s in b['segs']: s['tip'] = None
 
 FAMS = [
- ('Major chords', 'maj7, maj9, 6/9', '3 · 5 · 7 · 9', '7 · 9 · 3 · 5', 'On the home chord the 7 becomes a 6 (3 · 5 · 6 · 9): the sixth never fights a sung root.'),
- ('Minor chords', 'm7, m9, m6', '♭3 · 5 · ♭7 · 9', '♭7 · 9 · ♭3 · 5', 'For a minor 6 chord the ♭7 becomes a 6.'),
- ('Dominant chords', '7, 9, 13', '3 · 13 · ♭7 · 9', '♭7 · 9 · 3 · 13', 'When the chord leads to a minor chord, the 9 and 13 drop a half step (♭9, ♭13): darker, and it pulls harder.'),
+ ('Major 7th', 'root and 7th', '3 · 5 · 7'),
+ ('Major 6th (and major 7th under a sung root)', 'root and 5th', '3 · 5 · 6'),
+ ('Major or minor chord', 'root and 5th', 'the chord itself, in the shape nearest the last'),
+ ('Minor 7th', 'root and ♭7', '♭3 · 5 · ♭7'),
+ ('Dominant 7th', 'root and ♭7', '3 · 5 · ♭7'),
+ ('Half-diminished (m7♭5)', 'root and ♭7', '♭3 · ♭5 · ♭7'),
+ ('Diminished 7th', 'root and 𝄫7', '♭3 · ♭5 · 𝄫7'),
+ ('Slash chord (D/F♯)', 'the note after the slash, alone', 'the chord’s three notes'),
 ]
 
 HELD = {
@@ -40,29 +45,20 @@ HELD = {
 }
 
 def know_html(A, ar, meta):
-    fams = set()
-    for b in A['bars']:
-        for s in b['segs']:
-            f = s['form']
-            fams.add('dim' if 'diminished' in f else s['c'])
-    rows = ''.join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td><td>{d}</td></tr>' for a, b, c, d, e in FAMS)
-    notes = ''.join(f'<li>{e}</li>' for a, b, c, d, e in FAMS)
+    rows = ''.join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td></tr>' for a, b, c in FAMS)
     fills = [(b['n'], b['fill']) for b in A['bars'] if b['fill']]
     fl = ''.join(f"<li>Bar {html.escape(n)}: {html.escape(f['scale'])}, {len(f['notes'])} notes into {html.escape(f['into'])}.</li>" for n, f in fills)
-    nA = sum(1 for b in A['bars'] for s in b['segs'] if 'A form' in s['form'] and not s['same'])
-    nB = sum(1 for b in A['bars'] for s in b['segs'] if 'B form' in s['form'] and not s['same'])
     return f"""<h2>How the hands work</h2>
-<p><b>Left hand:</b> the bass note of each chord, low, held with the pedal. On long chords in slow passages it adds the fifth above. On a slash chord (D/F♯) it plays the note after the slash.</p>
-<p><b>Right hand:</b> four notes without the root, because the left hand already has it. Every chord type has two shapes. The A shape has the 3rd at the bottom, the B shape has the 7th at the bottom. Going from one chord to the next you usually switch between them, and then most fingers stay where they are or move one key. This song uses the A shape {nA} times and the B shape {nB} times.</p>
-<table><tr><th>Chord</th><th>Written</th><th>A shape, bottom to top</th><th>B shape</th></tr>{rows}</table>
-<ul>{notes}</ul>
+<p><b>Left hand:</b> a shell, the root with the 7th (or the 5th) above it, low and held with the pedal. On a slash chord it plays only the note after the slash.</p>
+<p><b>Right hand:</b> three notes close together, never four. On 7th and 6th chords the root is left out, because the left hand has it. Each time, the right hand takes the shape nearest the one before, so most fingers stay where they are.</p>
+<p>The chords are the song’s own, played plainly: no 9ths, 11ths or 13ths.</p>
+<table><tr><th>Chord</th><th>Left hand</th><th>Right hand, bottom to top</th></tr>{rows}</table>
 <h2>The fills</h2>
-<p>Only where you rest at the end of a bar. Each one walks the scale of the chord it's on and stops a step away from the top note of the next chord, so that note feels like an arrival.</p>
+<p>Only where you rest at the end of a bar, and no more than one in eight bars.</p>
 <ul>{fl or '<li>None in this song.</li>'}</ul>
 <h2>Practice order</h2>
-<ol><li>Learn the shapes at the bottom of the page one chord type at a time: say the numbers as you play them.</li>
-<li>Take one part. Left hand alone with the track, then right hand alone, then together slowly.</li>
-<li>Sing over it before the fills; add the fills last, when the chords are in your hands.</li></ol>"""
+<ol><li>Left hand alone with the track, then right hand alone, then together slowly.</li>
+<li>Sing over it before the fills; add the fills last.</li></ol>"""
 
 def run(slug, audio=True):
     C = charts.chart(slug)
@@ -97,14 +93,18 @@ def run(slug, audio=True):
                 tracks.append(('With the singer', f'{slug}-voice.mp3.locked', True))
     elif C.get('voice'):
         tracks.append(('With the singer' if C.get('guitar') else 'The record', f'{slug}-voice.mp3.locked', True))
+    if not C.get('voice') and C.get('keep_locked'):
+        prev = open(os.path.join('/home/claude/key-finder/songs', slug, 'index.html'), encoding='utf-8').read()
+        lab = re.search(r'data-src="' + re.escape(C['keep_locked']) + r'"[^>]*>([^<]*)<', prev)
+        tracks.append((html.unescape(lab.group(1)) if lab else 'With the singer', C['keep_locked'], 'keep'))
     key = C.get('key') or ''
     kd = key.replace('b ', '♭ ').replace('# ', '♯ ')
     kd = re.sub(r'^([A-G])b', r'\1♭', kd); kd = re.sub(r'^([A-G])#', r'\1♯', kd)
     nfill = sum(1 for b in A['bars'] if b['fill'])
     meta = dict(title=C['title'], key_disp=kd,
-                lede=f"For your voice and piano, in {kd or 'the key of the guitar arrangement'}, on the same bars and timing as the guitar arrangement. The left hand plays the bass; the right hand plays four-note shapes without the root that move as little as possible from chord to chord.",
+                lede=f"For your voice and piano, in {kd or 'the key of the guitar arrangement'}, on the same bars and timing as the guitar arrangement. The left hand plays the root with the 7th or 5th; the right hand plays three notes that move as little as possible from chord to chord.",
                 facts=[('Key', kd), ('Tempo', f"about {int(round(C['bpm']))} a minute" if C.get('bpm') else 'free'), ('Bars', str(len(A['bars']))), ('Fills', str(nfill))],
-                credits='Piano sound: Salamander Grand Piano by Alexander Holm (CC BY 3.0). Voicings after Mark Levine, <i>The Jazz Piano Book</i>, and Phil DeGreg, <i>Jazz Keyboard Harmony</i>. Chords from the guitar arrangement.')
+                credits='Piano sound: Salamander Grand Piano by Alexander Holm (CC BY 3.0). Shells and rootless voicings after Mark Levine, <i>The Jazz Piano Book</i>. Chords from the guitar arrangement.')
     page.build(meta, A, know_html(A, ar, meta), tracks, os.path.join(out, 'index.html'))
     json.dump(dict(slug=slug, title=C['title'], key=kd, source=C.get('source'), tracks=tracks), open(os.path.join(out, 'meta.json'), 'w'), ensure_ascii=False)
     print(slug, 'bars', len(A['bars']), 'fills', nfill, 'tracks', [t[0] for t in tracks])

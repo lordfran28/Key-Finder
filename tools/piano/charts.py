@@ -106,18 +106,54 @@ def pt_chart(s):
         bars.append(dict(label=n, sec=sec, start=st, chords=ch, beats=t, voc='', mel=[], words=words))
     return dict(key=None, tonic=None, meter=None, bpm=bpm, bars=bars)
 
+# Where the sources are now: the guitar pages on the Fret Finder shelf, and the singer's mixes kept in this
+# session's working folder. Songs whose mix isn't here keep the singer's track they have on the shelf.
+HERE_SP = '/tmp/claude-0/-home-claude/21160a08-ee74-5451-b6ed-a7c2a2d99676/scratchpad'
+KF = '/home/claude/key-finder/songs'
+VOICES = {
+ 'ive-got-a-crush-on-you': (HERE_SP + '/imp/crush/crush-all.mp3', FF + '/ive-got-a-crush-on-you/crush-tpt.mp3'),
+ 'seria-fantastico': (HERE_SP + '/imp/seria/serrat-voice.mp3', FF + '/seria-fantastico/serrat-guitar.mp3'),
+ 'ya-vas-lyubil': (HERE_SP + '/imp/yvl/yvl-voice.mp3', FF + '/ya-vas-lyubil/yvl-guitar.mp3'),
+ 'glinka-ya-pomnyu': (HERE_SP + '/imp/yapomnyu/irm-voice.mp3', FF + '/glinka-ya-pomnyu/irm-guitar.mp3'),
+ 'ochi-chyornye': (HERE_SP + '/imp/ochi/oci-voice.mp3', HERE_SP + '/imp/ochi/oci-guitar.mp3'),
+ 'are-you-lonesome-tonight': (HERE_SP + '/imp/lonesome/are-you-lonesome-tonight-full.mp3', None),
+}
+
+def kf_chart(s, slug):
+    D = json.loads(re.search(r'<script id="kf-data" type="application/json">(.*?)</script>', s, re.S).group(1))
+    bars = []
+    for b in D['bars']:
+        ch = [dict(c=norm(sg['c']), beats=float(sg['beats']), at=float(sg['at'])) for sg in b['segs']]
+        bars.append(dict(label=b['n'], sec=b['sec'], start=b['start'], end=b['end'], chords=ch,
+                         beats=sum(x['beats'] for x in ch), voc=b.get('voc', ''), mel=[], words=b.get('words', '')))
+    meta = json.load(open(os.path.join(KF, slug, 'song.json'), encoding='utf-8'))
+    k = (meta.get('key') or '').replace('♭', 'b').replace('♯', '#')
+    bpm = re.search(r'about (\d+) a minute', s)
+    return dict(key=k or None, tonic=None, meter=4, bpm=int(bpm.group(1)) if bpm else None, bars=bars)
+
 def chart(slug):
     title, page, vmix, gtr, free, src = SONGS[slug]
-    s = open(os.path.join(SP, page, 'index.html'), encoding='utf-8').read()
-    C = kit_chart(s) if '\nconst DATA = ' in s else pt_chart(s)
+    ff = os.path.join(FF, slug, 'index.html')
+    if os.path.exists(ff): path = ff
+    elif slug == 'are-you-lonesome-tonight': path = os.path.join(HERE_SP, 'imp/lonesome/index.html')
+    else: path = None
+    C = None
+    if path:
+        s = open(path, encoding='utf-8').read()
+        try: C = kit_chart(s) if '\nconst DATA = ' in s else pt_chart(s)
+        except Exception: C = None
+    if C is None:
+        s = open(os.path.join(KF, slug, 'index.html'), encoding='utf-8').read()
+        C = kf_chart(s, slug)
+    v = VOICES.get(slug)
+    old = [f for f in os.listdir(os.path.join(KF, slug)) if f.endswith('.mp3.locked')] if os.path.isdir(os.path.join(KF, slug)) else []
     C.update(slug=slug, title=title, words_free=free, source=src,
-             voice=os.path.join(SP, vmix) if vmix else None,
-             guitar=(gtr if (gtr and gtr.startswith('/')) else (os.path.join(SP, gtr) if gtr else None)))
+             voice=v[0] if v else None, guitar=v[1] if v else None, keep_locked=(old[0] if (old and not v) else None))
     if not C['key']:
         hd = re.search(r'([A-G][♭♯b#]?) (major|minor)', s)
         if hd: C['key'] = hd.group(1).replace('♭', 'b').replace('♯', '#') + ' ' + hd.group(2)
-    # bar ends from the next bar's start
     for i, b in enumerate(C['bars']):
+        if b.get('end') is not None: continue
         nx = next((x['start'] for x in C['bars'][i + 1:] if x.get('start') is not None), None)
         if b.get('start') is not None and nx is not None and nx > b['start']: b['end'] = nx
     for i, b in enumerate(C['bars']):

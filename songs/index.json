@@ -1,6 +1,6 @@
 {
  "app": "Key Finder",
- "generatedAt": "2026-11-02T09:30:06Z",
+ "generatedAt": "2026-11-04T22:18:16Z",
  "songs": [
   {
    "id": "are-you-lonesome-tonight",
@@ -280,6 +280,15 @@
    "instrument": "piano",
    "addedAt": "2026-11-02T09:25:17Z",
    "key": "B♭ major"
+  },
+  {
+   "id": "viva-la-vida",
+   "page": "songs/viva-la-vida/",
+   "title": "Viva la Vida",
+   "kind": "arrangement",
+   "instrument": "piano",
+   "addedAt": "2026-11-04T22:18:16Z",
+   "key": "E major"
   },
   {
    "id": "what-a-difference-a-day-made",

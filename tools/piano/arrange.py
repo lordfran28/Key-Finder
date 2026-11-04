@@ -7,7 +7,8 @@ becomes a 6th, so nothing rubs against the voice.
 Left hand: a shell, the root with the 7th (or the 6th or 5th) above it; under a slash chord, the bass alone.
 Right hand: three notes close together, without the root on seventh and sixth chords (rootless), a plain
 triad on triads. Of the three or four ways to stack them it takes the one nearest the last, so most fingers
-stay put. Never a fourth note in the right hand.
+stay put. Now and then a fourth note for a fuller sound: where a part starts or ends, on the
+last chord, and on a long chord while the voice rests, at most once in four bars.
 A short fill only where the voice rests at the end of a bar, at most one in eight bars.
 """
 import re, json, math
@@ -246,6 +247,28 @@ class Arranger:
             if best is None or c < best[0]: best = (c, v)
         return best[1] if best else sorted(60 + i for i in ivs)
 
+    def four(self, ch, rh, lh_top):
+        """A fourth right-hand note for a fuller chord: the 9th on a major 7th (the root would rub against
+        the 7th), the root on other 7th and 6th chords, the bottom note an octave up on a triad.
+        Fitted inside the hand if it can be, so the top note stays; the hand never spans more than an octave."""
+        pcs = {m % 12 for m in rh}
+        want = []
+        if ch.family == 'maj' and ch.sev == 11: want = [2]
+        elif ch.sev is not None or (9 in ch.ext and ch.sev is None): want = [0]
+        for iv in want:
+            pc = (ch.root + iv) % 12
+            if pc in pcs: continue
+            best = None
+            for m in range(max(55, lh_top + 3), 76):
+                if m % 12 != pc: continue
+                v = sorted(rh + [m])
+                if v[-1] - v[0] > 12: continue
+                cost = (0 if rh[0] < m < rh[-1] else 2) + 0.1 * (v[-1] - v[0])
+                if best is None or cost < best[0]: best = (cost, v)
+            if best: return best[1]
+        if rh[0] + 12 <= 75 and rh[0] + 12 > rh[-1]: return sorted(rh + [rh[0] + 12])
+        return rh
+
     def bass(self, ch, prev, two):
         top = 47 if two else 50
         cands = [m for m in range(36, top + 1) if m % 12 == ch.bass]
@@ -287,7 +310,7 @@ class Arranger:
         C = self.C; bars = C['bars']
         prev_rh = None; prev_b = None; out_bars = []; events = []
         seen_part = {}; last_fill = -99; part = None
-        rel_done = set(); moves_done = 0; six_done = 0
+        rel_done = set(); moves_done = 0; six_done = 0; last_four = -99
         flat = []
         for bi, b in enumerate(bars):
             for c in b['chords']: flat.append((bi, c))
@@ -317,14 +340,26 @@ class Arranger:
                 lhi, rhi, form = self.hands(ch)
                 lh0 = self.bass(ch, prev_b, len(lhi) > 1)
                 lh = [lh0 + i for i in lhi]
-                rh = self.choose_rh(ch, rhi, prev_rh, sung, lh[-1])
+                rh3 = self.choose_rh(ch, rhi, prev_rh, sung, lh[-1]); rh = rh3
+                # now and then a fourth finger: where a part starts or ends, the last chord, a long chord while the voice rests
+                last_in_bar = ci == len(b['chords']) - 1
+                part_end = last_in_bar and (bi + 1 == len(bars) or bars[bi + 1]['sec'] != b['sec'])
+                vocb = b.get('voc') or ''
+                resting = (vocb.count('·') * 2 >= len(vocb)) if vocb else bool(re.search(r'intro|ending|interlude|instrumental|solo', b['sec'] or '', re.I))
+                song_end = part_end and bi + 1 == len(bars)
+                part_start = ci == 0 and (bi == 0 or bars[bi - 1]['sec'] != b['sec'])
+                if song_end or (bi - last_four >= 4 and (((part_end or part_start) and c['beats'] >= 2) or (c['beats'] >= 4 and resting))):
+                    r4 = self.four(ch, rh3, lh[-1])
+                    if len(r4) == 4:
+                        rh = r4; last_four = bi
+                        form = form.replace('rootless', 'four notes').replace('triad', 'four notes')
                 t0 = st + c['at'] * spb; t1 = st + (c['at'] + c['beats']) * spb
                 key = (plain, tuple(rh), tuple(lh))
                 same = seen_part.get(key)
                 uid += 1; sid = f's{uid}'
                 if same is None: seen_part[key] = sid
                 tones = {str(m): tone_label(ch, m) for m in lh + rh}
-                if tip is None and prev_rh:
+                if tip is None and prev_rh and len(rh) == 3:
                     diff = [(a, x) for a, x in zip(sorted(prev_rh), rh) if a != x]
                     if len(diff) == 1 and abs(diff[0][0] - diff[0][1]) <= 2 and moves_done < 3:
                         tip = f"Only one finger moves: {self.N[diff[0][0] % 12]} {'up' if diff[0][1] > diff[0][0] else 'down'} to {self.N[diff[0][1] % 12]}."
@@ -347,7 +382,7 @@ class Arranger:
                     if not slow and c['beats'] >= 4:
                         tk = t0 + 2 * spb
                         for j, m in enumerate(rh): events.append(dict(t=tk + 0.01 * j, midi=m, vel=0.4, off=t1, hand='R', seg=sid))
-                prev_rh, prev_b = rh, lh0
+                prev_rh, prev_b = rh3, lh0
             # ---- a fill where the voice rests at the end of the bar, leading into the next chord
             fill = None
             voc = b.get('voc') or ''

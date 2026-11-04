@@ -50,7 +50,7 @@ def know_html(A, ar, meta):
     fl = ''.join(f"<li>Bar {html.escape(n)}: {html.escape(f['scale'])}, {len(f['notes'])} notes into {html.escape(f['into'])}.</li>" for n, f in fills)
     return f"""<h2>How the hands work</h2>
 <p><b>Left hand:</b> a shell, the root with the 7th (or the 5th) above it, low and held with the pedal. On a slash chord it plays only the note after the slash.</p>
-<p><b>Right hand:</b> three notes close together, never four. On 7th and 6th chords the root is left out, because the left hand has it. Each time, the right hand takes the shape nearest the one before, so most fingers stay where they are.</p>
+<p><b>Right hand:</b> mostly three notes close together. On 7th and 6th chords the root is left out, because the left hand has it. Each time, the right hand takes the shape nearest the one before, so most fingers stay where they are. Now and then a fourth finger adds one note for a fuller sound: where a part starts or ends, and on a long chord while you rest.</p>
 <p>The chords are the song’s own, played plainly: no 9ths, 11ths or 13ths.</p>
 <table><tr><th>Chord</th><th>Left hand</th><th>Right hand, bottom to top</th></tr>{rows}</table>
 <h2>The fills</h2>
@@ -102,7 +102,7 @@ def run(slug, audio=True):
     kd = re.sub(r'^([A-G])b', r'\1♭', kd); kd = re.sub(r'^([A-G])#', r'\1♯', kd)
     nfill = sum(1 for b in A['bars'] if b['fill'])
     meta = dict(title=C['title'], key_disp=kd,
-                lede=f"For your voice and piano, in {kd or 'the key of the guitar arrangement'}, on the same bars and timing as the guitar arrangement. The left hand plays the root with the 7th or 5th; the right hand plays three notes that move as little as possible from chord to chord.",
+                lede=f"For your voice and piano, in {kd or 'the key of the guitar arrangement'}, on the same bars and timing as the guitar arrangement. The left hand plays the root with the 7th or 5th; the right hand plays mostly three notes that move as little as possible from chord to chord.",
                 facts=[('Key', kd), ('Tempo', f"about {int(round(C['bpm']))} a minute" if C.get('bpm') else 'free'), ('Bars', str(len(A['bars']))), ('Fills', str(nfill))],
                 credits='Piano sound: Salamander Grand Piano by Alexander Holm (CC BY 3.0). Shells and rootless voicings after Mark Levine, <i>The Jazz Piano Book</i>. Chords from the guitar arrangement.')
     page.build(meta, A, know_html(A, ar, meta), tracks, os.path.join(out, 'index.html'))

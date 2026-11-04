@@ -22,7 +22,7 @@ These come from his own corrections over many arrangements (on guitar, piano and
 
 **Layout**
 - The full arrangement goes at the top, bar 1, bar 2 and on, in playing order, with no repeats or jumps left for the player to follow. Explanations, road maps and alternatives go at the bottom.
-- A diagram means a change, so never repeat one. A voicing that keeps going gets one diagram; the bars after it show none. A voicing that comes back later in the same part is named in large letters ("back to Dm9"), not drawn again. Each part opens with its own diagrams.
+- A diagram means a change, so never repeat one. A voicing that keeps going gets one diagram; the bars after it show none. A voicing that comes back after a different one is drawn again in full; never replace it with a name like "back to Dm9". Each part opens with its own diagrams.
 - Only runs and scales get numbers (the order they're played in).
 
 **Arranging**

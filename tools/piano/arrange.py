@@ -1,12 +1,14 @@
-"""Baritone voice and piano: an arrangement from a chord chart.
+"""Baritone voice and piano for a beginner: an arrangement from a chord chart.
 
-Left hand: the root (the written bass on slash chords), with its fifth on long chords in slow songs.
-Right hand: four-note rootless voicings in the two classic shapes (Levine, The Jazz Piano Book, ch. 3;
-DeGreg, Jazz Keyboard Harmony, ch. 4): "A" with the 3rd (or 7th of a major-sixth chord) at the bottom,
-"B" with the 7th at the bottom, picked bar by bar so the hand moves as little as possible and no note
-rubs a half step above what is sung. Major chords on the home key are played as 6/9, so a sung root
-never rubs against a major 7th. Dominants carry their 9th and 13th (♭9 and ♭13 when they lead to a
-minor chord). A few short fills, only where the voice rests at the end of a bar, at most one in four bars.
+The chords are the song's own, played plainly: triads, sixths and sevenths, with the 9ths, 11ths, 13ths
+and altered colours left out (a sus, a raised or lowered 5th and the bass under a slash chord stay,
+because they are the sound of the song). On a major 7th chord where the voice sings the root, the 7th
+becomes a 6th, so nothing rubs against the voice.
+Left hand: a shell, the root with the 7th (or the 6th or 5th) above it; under a slash chord, the bass alone.
+Right hand: three notes close together, without the root on seventh and sixth chords (rootless), a plain
+triad on triads. Of the three or four ways to stack them it takes the one nearest the last, so most fingers
+stay put. Never a fourth note in the right hand.
+A short fill only where the voice rests at the end of a bar, at most one in eight bars.
 """
 import re, json, math
 
@@ -149,6 +151,34 @@ def disp(name):
     q = q.replace('b5', '♭5').replace('b9', '♭9').replace('b13', '♭13').replace('#5', '♯5').replace('#9', '♯9').replace('#11', '♯11').replace('dim7', '°7').replace('dim', '°')
     return r + q
 
+
+def simplify(name):
+    """The song's chord, played plainly: (chart name for Chord(), display name)."""
+    ch = Chord(name)
+    m = re.match(r'^([A-G][#b]?)', name); root = m.group(1)
+    sl = re.search(r'/([A-G][#b]?)$', name); slash = '/' + sl.group(1) if sl else ''
+    f, t, fi, sev, e = ch.family, ch.third, ch.fifth, ch.sev, ch.ext
+    if f == 'dim': q = 'dim7' if sev == 9 else 'dim'
+    elif f == 'hdim': q = 'm7b5'
+    elif f == 'mmaj': q = 'm(maj7)'
+    elif f == 'min':
+        if fi == 6: q = 'dim'
+        elif sev == 10: q = 'm7'
+        elif 9 in e: q = 'm6'
+        else: q = 'm'
+    elif f in ('sus', 'sus3') or t == 5:
+        q = '7sus4' if sev == 10 else 'sus4'
+    elif t == 2: q = 'sus2'
+    elif f == 'dom':
+        q = '7' + ('#5' if fi == 8 else 'b5' if fi == 6 else '')
+    elif f == 'aug': q = 'aug' if sev is None else ('7#5' if sev == 10 else 'maj7#5')
+    else:  # major
+        if sev == 11: q = 'maj7' + ('#5' if fi == 8 else '')
+        elif 9 in e: q = '6'
+        else: q = ''
+    plain = root + q + slash
+    return plain
+
 class Arranger:
     def __init__(self, chart):
         self.C = chart
@@ -162,38 +192,65 @@ class Arranger:
 
     def nn(self, m): return self.N[m % 12] + str(m // 12 - 1)
 
-    def place(self, ch, ivs, prev):
+    def hands(self, ch):
+        """Left-hand intervals above the bass, right-hand intervals above the root (three of them), and the name."""
+        t, fi, sev = ch.third, ch.fifth, ch.sev
+        six = 9 in ch.ext and sev is None
+        slash = ch.bass != ch.root
+        if sev is not None:
+            rh = [t if t is not None else 7, fi, sev]
+            lh = [0, sev]
+        elif six:
+            rh = [t, fi, 9]; lh = [0, 7]
+        else:
+            rh = [0, t if t is not None else 7, fi]
+            lh = [0, 7] if fi == 7 else [0]
+        if slash:
+            lh = [0]
+            b = (ch.bass - ch.root) % 12
+            if b in [x % 12 for x in rh] and 0 not in rh:
+                rh = [0 if x % 12 == b else x for x in rh]
+        rootless = 0 not in [x % 12 for x in rh]
+        name = ('Bass' if len(lh) == 1 and slash else 'Root' if len(lh) == 1 else 'Shell') + (' + rootless' if rootless else ' + triad')
+        return lh, rh, name
+
+    def rh_options(self, ch, ivs, lo_floor):
+        pcs = [(ch.root + i) % 12 for i in ivs]
         out = []
-        for octv in range(3, 7):
-            base = 12 * octv + ch.root
-            notes = sorted(base + i for i in ivs)
-            if 50 <= notes[0] <= 63 and notes[-1] <= 79: out.append(notes)
+        for bottom in range(52, 70):
+            if bottom % 12 not in pcs: continue
+            rest = [p for p in pcs if p != bottom % 12] if len(set(pcs)) == len(pcs) else pcs[1:]
+            v = [bottom]
+            for p in rest:
+                v.append(bottom + ((p - bottom) % 12 or 12))
+            v = sorted(v)
+            if v[-1] - v[0] > 12: continue
+            if v[0] < lo_floor: continue
+            out.append(v)
         return out
 
-    def choose(self, ch, prev, sung, home, to_minor):
+    def choose_rh(self, ch, ivs, prev, sung, lh_top):
         best = None
-        for name, ivs in ch.shapes(home, to_minor):
-            for v in self.place(ch, ivs, prev):
-                c = 0.0
-                if prev:
-                    a, b = sorted(prev), v
-                    k = min(len(a), len(b))
-                    c += sum(abs(x - y) for x, y in zip(a[:k], b[:k])) * 0.5 + abs(len(a) - len(b))
-                else:
-                    c += abs(sum(v) / len(v) - 64) * 0.3
-                c += 0.25 * max(0, v[-1] - 74) + 0.25 * max(0, 55 - v[0])
-                for n in v:
-                    for p in sung:
-                        d = (n - p) % 12
-                        if d == 1: c += 3.0
-                        elif d == 11: c += 0.8
-                if best is None or c < best[0]: best = (c, name, v)
-        return best[1], best[2]
+        for v in self.rh_options(ch, ivs, max(55, lh_top + 3)):
+            c = 0.0
+            if prev:
+                a = sorted(prev); c += sum(abs(x - y) for x, y in zip(a, v)) * 0.5
+            else:
+                c += abs(sum(v) / len(v) - 64) * 0.3
+            c += 1.0 * max(0, v[-1] - 72) + 0.6 * max(0, 57 - v[0]) + 0.25 * abs(sum(v) / len(v) - 63)
+            for n in v:
+                for p in sung:
+                    d = (n - p) % 12
+                    if d == 1: c += 3.0
+                    elif d == 11: c += 0.8
+            if best is None or c < best[0]: best = (c, v)
+        return best[1] if best else sorted(60 + i for i in ivs)
 
-    def bass(self, ch, prev):
-        cands = [m for m in range(36, 51) if m % 12 == ch.bass]
-        if prev is None: return min(cands, key=lambda m: abs(m - 43))
-        return min(cands, key=lambda m: abs(m - prev) + 0.3 * abs(m - 43))
+    def bass(self, ch, prev, two):
+        top = 47 if two else 50
+        cands = [m for m in range(36, top + 1) if m % 12 == ch.bass]
+        if prev is None: return min(cands, key=lambda m: abs(m - 42))
+        return min(cands, key=lambda m: abs(m - prev) + 0.3 * abs(m - 42))
 
     def scale(self, ch):
         f = ch.family
@@ -229,14 +286,14 @@ class Arranger:
     def run(self):
         C = self.C; bars = C['bars']
         prev_rh = None; prev_b = None; out_bars = []; events = []
-        seen_part = {}; last_fill = -9; part = None
-        tips_done = set(); rel_done = set(); moves_done = 0
+        seen_part = {}; last_fill = -99; part = None
+        rel_done = set(); moves_done = 0; six_done = 0
         flat = []
         for bi, b in enumerate(bars):
             for c in b['chords']: flat.append((bi, c))
-        nxt_of = {}
-        for k in range(len(flat) - 1): nxt_of[id(flat[k][1])] = flat[k + 1][1]['c']
         uid = 0
+        slow = self.bpm < 92
+        gap = 12 if self.bpm >= 120 else 8
         for bi, b in enumerate(bars):
             if b['sec'] != part:
                 part = b['sec']; seen_part = {}
@@ -246,65 +303,51 @@ class Arranger:
             sung = {pc_of(x.replace('♭', 'b').replace('♯', '#')) for x in b.get('mel', []) if x and x[0] in NOTE}
             segs = []
             for ci, c in enumerate(b['chords']):
-                try: ch = Chord(c['c'])
-                except Exception: continue
-                nxt = nxt_of.get(id(c))
-                to_minor = False
-                if nxt and ch.family == 'dom':
-                    try:
-                        n2 = Chord(nxt); to_minor = n2.family in ('min', 'mmaj', 'hdim') and (n2.root - ch.root) % 12 == 5
-                    except Exception: pass
-                home = ch.root == self.key_pc and ch.family == 'maj' and not self.minor
-                form, rh = self.choose(ch, prev_rh, sung, home, to_minor)
-                lh = [self.bass(ch, prev_b)]
-                slow = self.bpm < 92
-                if slow and c['beats'] >= 4 and lh[0] + 7 < rh[0]: lh.append(lh[0] + 7)
+                try:
+                    plain = simplify(c['c']); ch = Chord(plain)
+                except Exception:
+                    continue
+                tip = None
+                # a major 7th under a sung root rubs: play the 6th instead
+                if ch.family == 'maj' and ch.sev == 11 and ch.fifth == 7 and ch.root in sung:
+                    plain = plain.replace('maj7', '6'); ch = Chord(plain)
+                    if six_done < 2:
+                        tip = f"{disp(plain).split('/')[0]} here, not major 7: you sing {self.N[ch.root]}, and the 7th would rub against it."
+                        six_done += 1
+                lhi, rhi, form = self.hands(ch)
+                lh0 = self.bass(ch, prev_b, len(lhi) > 1)
+                lh = [lh0 + i for i in lhi]
+                rh = self.choose_rh(ch, rhi, prev_rh, sung, lh[-1])
                 t0 = st + c['at'] * spb; t1 = st + (c['at'] + c['beats']) * spb
-                key = (c['c'], tuple(rh), tuple(lh))
+                key = (plain, tuple(rh), tuple(lh))
                 same = seen_part.get(key)
                 uid += 1; sid = f's{uid}'
                 if same is None: seen_part[key] = sid
                 tones = {str(m): tone_label(ch, m) for m in lh + rh}
-                tip = None
-                # tips: one-finger move; rootless = another chord; guide tones in ii-V
-                if prev_rh and len(prev_rh) == len(rh):
+                if tip is None and prev_rh:
                     diff = [(a, x) for a, x in zip(sorted(prev_rh), rh) if a != x]
                     if len(diff) == 1 and abs(diff[0][0] - diff[0][1]) <= 2 and moves_done < 3:
                         tip = f"Only one finger moves: {self.N[diff[0][0] % 12]} {'up' if diff[0][1] > diff[0][0] else 'down'} to {self.N[diff[0][1] % 12]}."
                         moves_done += 1
-                if tip is None and same is None:
-                    rel = self.relation(ch, rh)
+                if tip is None and same is None and 'rootless' in form:
+                    rel = self.relation(ch, rh, plain)
                     if rel and rel not in rel_done and len(rel_done) < 4:
                         tip = rel; rel_done.add(rel)
-                if tip is None and same is None and ch.family == 'dom' and 'tritone' not in tips_done:
-                    t3 = (ch.root + (ch.third or 4)) % 12; t7 = (ch.root + 10) % 12
-                    if any(m % 12 == t3 for m in rh) and any(m % 12 == t7 for m in rh):
-                        sub = self.N[(ch.root + 6) % 12]
-                        tip = f"{self.N[t3]} and {self.N[t7]}, the 3rd and ♭7, are the heart of {disp(c['c']).split('/')[0]}: the same two notes are the ♭7 and 3rd of {sub}7."
-                        tips_done.add('tritone')
-                if tip is None and same is None and home and form.startswith('6/9') and '69' not in tips_done:
-                    tip = f"6/9 instead of major 7 on the home chord: no {self.N[(ch.root + 11) % 12]} to rub against a sung {self.N[ch.root]}."
-                    tips_done.add('69')
-                seg = dict(id=sid, c=disp(c['c']), beats=c['beats'], at=c['at'], lh=lh, rh=rh, form=form, tones=tones, same=same, tip=tip,
+                seg = dict(id=sid, c=disp(plain).replace('aug', '+'), beats=c['beats'], at=c['at'], lh=lh, rh=rh, form=form, tones=tones, same=same, tip=tip,
                            names=[spell(ch, m, self.nn(m)) for m in lh + rh])
                 segs.append(seg)
-                # ---- comping
-                vel = 0.5
-                for m in lh: events.append(dict(t=t0, midi=m, vel=0.55, off=t1, hand='L', seg=sid))
+                # ---- comping: held chords; a waltz plays the right hand on 2 and 3; quicker songs strike again
+                for m in lh: events.append(dict(t=t0, midi=m, vel=0.52, off=t1, hand='L', seg=sid))
                 if self.meter == 3 and c['beats'] >= 2:
-                    for k in range(1, int(round(c['beats']))):
-                        tk = t0 + k * spb
-                        for j, m in enumerate(rh): events.append(dict(t=tk + 0.008 * j, midi=m, vel=0.42 + 0.02 * (j == len(rh) - 1), off=tk + spb * 0.9, hand='R', seg=sid))
-                    if c['beats'] >= 3 and len(lh) == 1:
-                        pass
+                    for k_ in range(1, int(round(c['beats']))):
+                        tk = t0 + k_ * spb
+                        for j, m in enumerate(rh): events.append(dict(t=tk + 0.008 * j, midi=m, vel=0.42, off=tk + spb * 0.9, hand='R', seg=sid))
                 else:
-                    for j, m in enumerate(rh): events.append(dict(t=t0 + 0.014 * j, midi=m, vel=vel + 0.04 * (j == len(rh) - 1), off=t1, hand='R', seg=sid))
+                    for j, m in enumerate(rh): events.append(dict(t=t0 + 0.014 * j, midi=m, vel=0.5 + 0.04 * (j == len(rh) - 1), off=t1, hand='R', seg=sid))
                     if not slow and c['beats'] >= 4:
-                        tk = t0 + 1.5 * spb
+                        tk = t0 + 2 * spb
                         for j, m in enumerate(rh): events.append(dict(t=tk + 0.01 * j, midi=m, vel=0.4, off=t1, hand='R', seg=sid))
-                    if c['beats'] >= 4 and len(lh) == 1 and not slow:
-                        events.append(dict(t=t0 + 2 * spb, midi=lh[0] + 7 if lh[0] + 7 < rh[0] else lh[0], vel=0.45, off=t1, hand='L', seg=sid))
-                prev_rh, prev_b = rh, lh[0]
+                prev_rh, prev_b = rh, lh0
             # ---- a fill where the voice rests at the end of the bar, leading into the next chord
             fill = None
             voc = b.get('voc') or ''
@@ -314,31 +357,30 @@ class Arranger:
                 else: break
             if not voc and (re.search(r'intro|ending|interlude|instrumental|solo', b['sec'] or '', re.I)) and bi + 1 < len(bars) and bars[bi + 1]['sec'] != b['sec']:
                 rest_end = 4
-            if segs and rest_end >= 3 and bi - last_fill >= (8 if self.bpm >= 120 else self.C.get('fill_gap', 6)) and bi + 1 < len(bars) and bars[bi + 1]['chords']:
+            if segs and rest_end >= 3 and bi - last_fill >= gap and bi + 1 < len(bars) and bars[bi + 1]['chords']:
                 try:
-                    chn = Chord(bars[bi + 1]['chords'][0]['c'])
-                    nform, nrh = self.choose(chn, prev_rh, set(), False, False)
-                    ch_last = Chord(b['chords'][-1]['c'])
-                    eighths = min(rest_end, 6)
+                    chn = Chord(simplify(bars[bi + 1]['chords'][0]['c']))
+                    _, nri, _ = self.hands(chn)
+                    nrh = self.choose_rh(chn, nri, prev_rh, set(), 50)
+                    ch_last = Chord(simplify(b['chords'][-1]['c']))
+                    eighths = min(rest_end, 5)
                     beats_per8 = (b['beats'] or self.meter) / max(1, len(voc) or 8)
                     notes, scale_name = self.fill(ch_last, prev_rh[-1], nrh[-1], eighths)
                     if len(notes) >= 3:
                         tstart = en - eighths * beats_per8 * spb
                         dur8 = beats_per8 * spb
-                        # the held right hand lets go when the fill starts
                         for e in events:
                             if e['hand'] == 'R' and e['off'] > tstart and e['t'] < tstart and e['seg'] == segs[-1]['id']: e['off'] = tstart + 0.05
                         for j, m in enumerate(notes):
                             events.append(dict(t=tstart + j * dur8, midi=m, vel=0.5 + 0.03 * j / len(notes), off=tstart + (j + 1.2) * dur8, hand='F', seg=f'f{bi}'))
                         fill = dict(id=f'f{bi}', notes=notes, names=[spell(ch_last, m, self.nn(m)) for m in notes], scale=f"{self.N[ch_last.root]} {scale_name}",
-                                    tones={str(m): tone_label(ch_last, m) for m in notes}, chord=disp(b['chords'][-1]['c']), into=disp(bars[bi + 1]['chords'][0]['c']),
+                                    tones={str(m): tone_label(ch_last, m) for m in notes}, chord=disp(simplify(b['chords'][-1]['c'])), into=disp(simplify(bars[bi + 1]['chords'][0]['c'])),
                                     t=round(tstart, 3))
                         last_fill = bi
                 except Exception:
                     pass
             out_bars.append(dict(n=b['label'], sec=b['sec'], start=round(st, 3), end=round(en, 3), voc=voc,
                                  words=b.get('words', '') if self.C.get('words_free') else '', segs=segs, fill=fill))
-        # last chord: let it ring, rolled up slowly
         if events:
             lastt = max(e['t'] for e in events)
             tail = [e for e in events if e['t'] >= lastt - 0.1]
@@ -346,16 +388,15 @@ class Arranger:
                 e['t'] += 0.06 * j; e['off'] = e['t'] + 4.0; e['vel'] = min(0.6, e['vel'] + 0.05)
         return dict(bars=out_bars, events=events)
 
-    def relation(self, ch, rh):
-        """When the right hand's four notes are themselves a common chord, say so."""
+    def relation(self, ch, rh, plain):
+        """When the right hand's three notes are a plain triad, say which: it is the easiest way to find them."""
         s = sorted({m % 12 for m in rh})
-        if len(s) != 4: return None
+        if len(s) != 3: return None
         for r in range(12):
-            for q, iv in (('maj7', [0, 4, 7, 11]), ('m7', [0, 3, 7, 10]), ('7', [0, 4, 7, 10]), ('m7♭5', [0, 3, 6, 10]), ('6', [0, 4, 7, 9]), ('m(maj7)', [0, 3, 7, 11])):
+            for q, iv in (('major', [0, 4, 7]), ('minor', [0, 3, 7]), ('diminished', [0, 3, 6])):
                 if sorted((r + i) % 12 for i in iv) == s and r != ch.root:
                     pn = lambda pc: re.sub(r'-?\d+$', '', spell(ch, 60 + pc, self.N[pc]))
-                    other = pn(r) + q
-                    return f"Your right hand is playing {other}. Put {pn(ch.bass)} under it and it becomes {disp(ch.name).split('/')[0]}: the same shape serves both."
+                    return f"Your right hand is a plain {pn(r)} {q} chord. With {pn(ch.bass)} in the left hand it becomes {disp(plain).split('/')[0]}."
         return None
 
 if __name__ == '__main__':

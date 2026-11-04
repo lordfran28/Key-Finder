@@ -98,13 +98,14 @@ function kb(lh, rh, fill, tones, id) {
 const nm = n => n.replace(/(\d)$/, '<sub>$1</sub>');
 // ---------- bars
 const body = $('arr'); let html = ''; let part = null; const barEls = []; let prevDiag = null;
+const segDiag = {}; let lastDrawn = null;
 D.bars.forEach((b, i) => {
   if (b.sec !== part) { if (part !== null) html += '</div>'; part = b.sec; const n1 = b.n; const last = D.bars.slice(i).findIndex(x => x.sec !== part); const nb = last < 0 ? D.bars.length - i : last;
     html += `<div class="part-h"><h2>${esc(part ? part[0].toUpperCase() + part.slice(1) : 'Song')}</h2><span>${nb} bar${nb > 1 ? 's' : ''}</span></div><div class="bars">`; }
   let segs = b.segs.map(s => {
     const dk = s.same || s.id, held = dk === prevDiag; prevDiag = dk;
-    if (held) return `<div class="seg"><div class="cn">${esc(s.c)}</div><div class="cont">continues</div>${s.tip ? `<div class="tip">${esc(s.tip)}</div>` : ''}</div>`;
-    if (s.same) return `<div class="seg"><div class="cn">${esc(s.c)}</div><div class="back">back to ${esc(s.c)}</div>${s.tip ? `<div class="tip">${esc(s.tip)}</div>` : ''}</div>`;
+    if (held) { segDiag[s.id] = lastDrawn; return `<div class="seg"><div class="cn">${esc(s.c)}</div><div class="cont">continues</div>${s.tip ? `<div class="tip">${esc(s.tip)}</div>` : ''}</div>`; }
+    segDiag[s.id] = lastDrawn = 'k-' + s.id;
     const lhN = s.names.slice(0, s.lh.length), rhN = s.names.slice(s.lh.length);
     return `<div class="seg" style="flex-grow:${s.beats}"><div class="cn">${esc(s.c)}</div><div class="form">${esc(s.form)}</div>${kb(s.lh, s.rh, null, s.tones, 'k-' + s.id)}<div class="names">L ${lhN.map(x => x.replace(/\d+$/, '')).join(' ')} · R ${rhN.map(x => x.replace(/\d+$/, '')).join(' ')}</div>${s.tip ? `<div class="tip">${esc(s.tip)}</div>` : ''}</div>`;
   }).join('');
@@ -133,7 +134,7 @@ body.addEventListener('click', e => { const b = e.target.closest('.seek'); if (!
 let follow = true; $('follow').addEventListener('change', e => follow = e.target.checked);
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let cur = -1, lit = [], raf = 0;
-const segDiag = {}; D.bars.forEach(b => { b.segs.forEach(s => segDiag[s.id] = 'k-' + (s.same ? s.same.replace(/^/, '') : s.id)); if (b.fill) segDiag[b.fill.id] = 'k-' + b.fill.id; });
+D.bars.forEach(b => { if (b.fill) segDiag[b.fill.id] = 'k-' + b.fill.id; });
 function frame() {
   const t = audio.currentTime;
   let k = -1; for (let i = 0; i < D.bars.length; i++) { if (D.bars[i].start <= t + 0.03) k = i; else break; }

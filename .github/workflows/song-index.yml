@@ -27,9 +27,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add songs/index.json
+          git add songs/index.json songs/shapes.json
           if git diff --cached --quiet; then echo "Nothing to save."; exit 0; fi
-          git commit -m "Update the song list"
+          git commit -m "Update the song list and the shape book"
           for i in 1 2 3; do
             git push origin HEAD:main && exit 0
             git pull --rebase origin main

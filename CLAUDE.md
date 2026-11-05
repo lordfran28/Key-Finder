@@ -16,6 +16,12 @@ The owner is a baritone who sings and plays the piano at the same time. He is le
 - **Tips only when they are clear and immediately useful at the keyboard.** No theory lessons, no general advice, nothing he has to read twice.
 - Repertoire: mostly old jazz standards and showtunes with great harmony and good lyrics, in keys for a baritone.
 
+He learns by playing along with the tracks slowly, day after day, until the shapes become habit. The site helps with that in three ways, all kept on his device:
+
+- **The music stand.** A *Music stand* button in every song's player opens a full-screen view for a phone or tablet on the piano: the chord he's on, very large, with its keys lighting, any fill under it on keys the same size, the words for public-domain songs, and the next chord smaller, all following the track. It has play, previous and next chord, the track choice and the speeds, and keeps the screen awake.
+- **The shape book** (`#shapes`, or `#shapes/SLUG` from a song's "Practise them in the shape book" link). Every shape in the songs (a chord with its left- and right-hand keys) once. Each day it gives him a few by name ("C♯m7 · Shell + rootless · top note B", with the song and bar); he plays, shows the keys (which also plays the moment from the song's piano track) and says *Got it* or *Not yet*. A shape that came back right returns after 1, 3, 7, 14, 30 and 60 days; one that didn't returns at the end of the round and the next day. New shapes come five a day from the song he's learning, in the order the song plays them. Below, every shape of that song, or of all songs with the most used first, marked new, learning or known (right on two different days).
+- **The library shows where he is.** Under each song: the key and how many shapes it has, and once he knows some, how many are new to him; for songs he has played, when, at what speed, up from what, and on how many days. The songs can be put in order A to Z, by fewest new shapes (the next song to learn) or by last played.
+
 ## The owner's rules for arranging
 
 These come from his own corrections over many arrangements (on guitar, piano and trumpet). They outrank anything an algorithm or a habit prefers.
@@ -43,10 +49,12 @@ These come from his own corrections over many arrangements (on guitar, piano and
 
   `python3 tools/import_arrangement.py PAGE.html SLUG "Title" --key "E♭ major" --source ARTIFACT-URL --file NAME=PATH ... [--locked NAME.mp3.locked=PATH ...] [--drop-alt]`
 
-  It adds Key Finder's look (`assets/shelf.css`, which only sets the page's colour and type variables), a bar at the top like Fret Finder's ("← Key Finder", then the key and "voice and piano"), and `assets/voice.js` first thing in `<head>`; it marks the buttons of locked tracks `data-locked`. Running it again on the same slug replaces the page and keeps the date and key.
+  It adds Key Finder's look (`assets/shelf.css`, which only sets the page's colour and type variables), a bar at the top like Fret Finder's ("← Key Finder", then the key and "voice and piano"), `assets/voice.js` first thing in `<head>`, and `assets/speed.js` and `assets/practice.js` at the end; it marks the buttons of locked tracks `data-locked`. Running it again on the same slug replaces the page and keeps the date and key.
 - **Slower tracks.** `assets/speed.js` puts a row of speeds (100% down to 50%) inside every track player on a song page. The pitch stays the same, the keys keep lighting with the slower track, and each song remembers its own speed on the device (`kf.speed:` + the page's path), so the owner can play along slowly and raise it day by day. The import tool adds it to every page. Fret Finder has the same file; keep the two in step.
-- `.github/scripts/song_index.py` lists every such folder in `songs/index.json`. The *Song list* workflow runs it on every push that touches `songs/`. Run it locally too before committing, so the list is right at once.
-- The library lists the songs A to Z with the key and "voice and piano" under each title, and links straight to the page. A search box appears from six songs up. It has no way to add a song.
+- **Practising.** `assets/practice.js` reads the page's own data (`<script id="kf-data">`: bars, segments, events) for the music stand, and notes how long the track played each day and at what speed. The library loads it too, for its keyboard drawing and those notes. It needs nothing from the arranger beyond that data, so pages rebuilt by `tools/piano` keep working.
+- `.github/scripts/song_index.py` lists every such folder in `songs/index.json` and writes the shape book, `songs/shapes.json`, from the songs' pages: each shape once (chord, form, keys, tones, note names) with the songs it's in and where it first sounds in each song's piano track, and each song's shapes in the order they come. The *Song list* workflow runs it on every push that touches `songs/`. Run it locally too before committing, so both are right at once.
+- The library lists the songs A to Z (or by fewest new shapes, or last played) with the key and the number of shapes under each title, and links straight to the page. A *Shapes* card at the top says how many are due today. A search box appears from six songs up. It has no way to add a song.
+- What a device keeps: `kf.speed:` + page path (speed), `kf.played:` + page path (seconds played per day and speed), `kf.shapes` (each shape's run of right answers and the day it's due), `kf.newtoday`, `kf.learning`, `kf.sort`. Nothing leaves the device.
 - Titles of classical pieces start with the composer: "Bach – Prelude and Fugue, BWV 867". The library sets the composer in small capitals.
 - Keyboard diagrams should colour their keys with `--key-white`, `--key-black` and `--key-edge`, which `shelf.css` sets for light and dark. Drawn with `--ink`, black keys turn ivory in dark mode. `shelf.css` also sets the variables Fret Finder's pages use (`--bg`, `--surface`, `--ink`, `--accent`, `--voice` and the rest). When the first piano pages arrive, check them against it and add any variable they use that isn't there.
 
@@ -79,9 +87,9 @@ The same rules as Fret Finder.
 - **Write commit messages for the player.** Say in plain words what changed for him, not which function moved.
 - Each site is its own repository. Don't change Fret Finder or Valve Finder from here.
 
-## Where it stands (2 November 2026)
+## Where it stands (5 November 2026)
 
-- Built: the library, the owner page, the song-page look, the import tool and the song-list workflow.
+- Built: the library, the owner page, the song-page look, the import tool and the song-list workflow; slower tracks; the music stand, the shape book and the library's progress (5 November).
 - 39 songs, built with the tools in `tools/piano/` (see its README).
 - The look now matches the sister sites (see Look and paintings).
 - Live at https://lordfran28.github.io/Key-Finder/ (repository lordfran28/Key-Finder, Pages from `main`, root).

@@ -81,6 +81,10 @@ def main():
     speed = '<script src="../../assets/speed.js" defer></script>'
     html = html.replace(speed, "")
     html = html.replace("</body>", speed + "</body>", 1) if "</body>" in html else html + speed
+    # The music stand, the note of the days the song was played, and the way to the shape book.
+    practice = '<script src="../../assets/practice.js" defer></script>'
+    html = html.replace(practice, "")
+    html = html.replace("</body>", practice + "</body>", 1) if "</body>" in html else html + practice
     with open(os.path.join(out, "index.html"), "w", encoding="utf-8") as f:
         f.write(html)
 

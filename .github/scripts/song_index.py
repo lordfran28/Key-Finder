@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
-"""Writes songs/index.json: the list of songs Key Finder shows.
+"""Writes songs/index.json, the list of songs Key Finder shows, and songs/shapes.json, the shape book.
 
 Every folder under songs/ holding an index.html and a song.json is one arrangement made in
 conversation; its page is the folder's index.html. song.json gives the title, the key and the date.
+
+The shape book gathers every hand shape (a chord with its left- and right-hand keys) from the songs'
+pages, once, with the songs it comes in, where it first sounds in each song's piano track, and each
+song's shapes in the order they first come.
 """
 import datetime, json, os, re, subprocess, unicodedata
 
@@ -39,6 +43,74 @@ def slug(text):
     return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-") or "song"
 
 
+DATA = re.compile(r'<script id="kf-data" type="application/json">(.*?)</script>', re.S)
+TRACK = re.compile(r'<div class="sw"[^>]*>\s*<button[^>]*data-src="([^"]+)"')
+
+
+def page_shapes(html):
+    """The song's bars and events from its page, or None when the page carries none."""
+    m = DATA.search(html)
+    if not m:
+        return None
+    try:
+        return json.loads(m.group(1).replace("<\\/", "</"))
+    except ValueError:
+        return None
+
+
+def shape_book(songs):
+    shapes, book = {}, {}
+    for s in songs:
+        try:
+            with open(os.path.join(s["page"], "index.html"), encoding="utf-8") as f:
+                html = f.read()
+        except OSError:
+            continue
+        d = page_shapes(html)
+        if not d or not d.get("bars"):
+            continue
+        tm = TRACK.search(html)
+        when = {}
+        for e in d.get("events", []):
+            t, off, seg = e[0], e[3], e[4]
+            a = when.setdefault(seg, [t, off])
+            a[0], a[1] = min(a[0], t), max(a[1], off)
+        order = []
+        for i, b in enumerate(d["bars"]):
+            for g in b.get("segs", []):
+                lh, rh = g.get("lh") or [], g.get("rh") or []
+                if not rh and not lh:
+                    continue
+                sid = "%s|%s|%s" % (g["c"], ".".join(map(str, lh)), ".".join(map(str, rh)))
+                if sid in order:
+                    continue
+                order.append(sid)
+                sh = shapes.get(sid)
+                if not sh:
+                    tones = g.get("tones") or {}
+                    sh = shapes[sid] = {"c": g["c"], "f": g.get("form") or "", "lh": lh, "rh": rh,
+                                        "t": [tones.get(str(m), "") for m in lh + rh],
+                                        "n": [re.sub(r"\d+$", "", x) for x in (g.get("names") or [])], "in": []}
+                t0, t1 = when.get(g.get("same") or g["id"]) or when.get(g["id"]) or [b["start"], b["end"]]
+                sh["in"].append([s["id"], i, str(b.get("n", i + 1)), round(t0, 2), round(min(t1, t0 + 2.6), 2)])
+        book[s["id"]] = {"track": s["page"] + tm.group(1) if tm else "", "shapes": order}
+    return {"songs": book, "shapes": shapes}
+
+
+def write_if_changed(path, data, label):
+    text = json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n"
+    try:
+        with open(path, encoding="utf-8") as f:
+            if f.read() == text:
+                print("%s unchanged." % label)
+                return
+    except OSError:
+        pass
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(text)
+    print("Wrote %s." % label)
+
+
 def main():
     songs, used = [], set()
     os.makedirs(ROOT, exist_ok=True)
@@ -69,6 +141,9 @@ def main():
         songs.append(entry)
         dirs[:] = []
     songs.sort(key=lambda s: (s["title"].casefold(), s["page"]))
+
+    book = shape_book(songs)
+    write_if_changed(os.path.join(ROOT, "shapes.json"), book, "the shape book (%d shapes)" % len(book["shapes"]))
 
     try:
         with open(OUT, encoding="utf-8") as f:

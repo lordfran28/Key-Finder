@@ -11,6 +11,7 @@
 <link rel="preload" href="assets/fonts/eb-garamond-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/im-fell-french-canon-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script src="assets/voice.js"></script>
+<script src="assets/practice.js"></script>
 <style>
 @font-face{font-family:"EB Garamond";font-style:normal;font-weight:400 800;font-display:swap;src:url("assets/fonts/eb-garamond-latin-wght-normal.woff2") format("woff2")}
 @font-face{font-family:"EB Garamond";font-style:italic;font-weight:400 800;font-display:swap;src:url("assets/fonts/eb-garamond-latin-wght-italic.woff2") format("woff2")}
@@ -94,6 +95,40 @@ input::placeholder{color:var(--muted)}
 .error{margin:0;background:var(--warn-soft);color:var(--warn);border-radius:3px;padding:10px 14px}
 .small{margin:0;font-size:.98rem;color:var(--muted)}
 
+.song-meta.played{color:var(--accent);font-style:italic}
+.toolcard{display:flex;align-items:baseline;justify-content:space-between;gap:4px 14px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:3px;padding:12px 14px;color:var(--ink);text-decoration:none}
+.toolcard:hover{border-color:var(--accent)}
+.toolcard .song-title{font-size:1.45rem}
+.sortrow{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 16px;margin:-4px 0 -6px}
+.sortrow .btn{font-size:1.1rem;min-height:2.2rem;color:var(--muted)}
+.sortrow .btn[aria-pressed="true"]{color:var(--accent);opacity:1;background-size:100% 1px}
+select{font:inherit;font-size:1.02rem;color:var(--ink);background:var(--well);border:1px solid var(--line);border-radius:3px;padding:7px 10px;width:100%;min-width:0;max-width:100%}
+
+/* Shape book */
+.drill{background:var(--surface);border:1px solid var(--line);outline:1px solid var(--line);outline-offset:3px;border-radius:2px;padding:16px 16px 12px;margin:4px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:4px}
+.drill-top{align-self:stretch;display:flex;justify-content:space-between;font-size:.98rem;color:var(--muted);font-variant-numeric:lining-nums}
+.drill-top .tag{font-variant-caps:all-small-caps;letter-spacing:.1em;color:var(--accent);font-weight:600}
+.drill-cn{font:400 clamp(3.4rem,16vw,5.2rem)/1 var(--display);color:var(--accent);margin-top:4px}
+.drill-form{font-size:1.08rem;color:var(--ink)}
+.drill-from{font-size:.98rem;color:var(--muted);font-style:italic}
+.drill-from a{color:inherit}
+.drill-keys{width:100%;max-width:34rem;margin-top:10px}
+.drill-names{font-size:1rem;color:var(--muted);font-variant-numeric:lining-nums}
+.drill .btnrow{justify-content:center;margin-top:6px}
+.drill-done{font:400 1.5rem/1.2 var(--display);margin:6px 0}
+.gridhead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 14px;margin-top:10px}
+.gridhead select{width:auto;flex:1 1 14rem;max-width:22rem}
+.shapegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.shapecard{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:8px 8px 6px;font:inherit;color:var(--ink);text-align:center;cursor:pointer;content-visibility:auto;contain-intrinsic-size:auto 150px}
+.shapecard:hover{border-color:var(--accent)}
+.shapecard .cn{font:400 1.35rem/1.1 var(--display);color:var(--accent)}
+.shapecard .fm{font-size:.82rem;color:var(--muted)}
+.shapecard .pk{margin:3px 0}
+.shapecard .in{font-size:.86rem;color:var(--muted);line-height:1.25}
+.shapecard .st{font-variant-caps:all-small-caps;letter-spacing:.1em;font-size:.95rem;color:var(--muted)}
+.shapecard.known .st{color:var(--accent);font-weight:600}
+.shapecard.learning .st{color:var(--ink)}
+
 /* Owner page */
 .songbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .back{font-weight:600;text-decoration:none;font-variant-caps:all-small-caps;letter-spacing:.08em;font-size:1.1rem}
@@ -140,10 +175,27 @@ input::placeholder{color:var(--muted)}
 
   <section id="view-library" class="view" aria-label="Songs">
     <p id="libmsg" class="error" role="alert" hidden></p>
+    <a id="toshapes" class="toolcard" href="#shapes" hidden><span class="song-title">Shapes</span><span id="shapesdue" class="song-meta"></span></a>
     <div id="searchwrap" class="field" hidden><label for="search" class="vh">Search the songs</label><input id="search" type="search" placeholder="Search" autocomplete="off" spellcheck="false"></div>
+    <div id="sortrow" class="sortrow" role="group" aria-label="Order" hidden>
+      <button type="button" class="btn link" data-sort="az" aria-pressed="true">A to Z</button>
+      <button type="button" class="btn link" data-sort="new" aria-pressed="false">Fewest new shapes</button>
+      <button type="button" class="btn link" data-sort="played" aria-pressed="false" hidden>Last played</button>
+    </div>
     <ul id="songlist" class="songlist" hidden></ul>
     <p id="nomatch" class="small" hidden>No songs match that search.</p>
     <div id="empty" class="empty" hidden><h3>Nothing here yet</h3></div>
+  </section>
+
+  <section id="view-shapes" class="view" aria-labelledby="shapes-h" hidden>
+    <div class="songbar"><a href="#" class="back">← Songs</a></div>
+    <h2 id="shapes-h">Shapes</h2>
+    <div class="field"><label for="learn">Learning</label><select id="learn"></select></div>
+    <p id="learnsum" class="small"></p>
+    <div id="drill" class="drill" aria-live="polite"></div>
+    <div class="gridhead"><h3>All the shapes</h3><label for="gridsel" class="vh">Which shapes</label><select id="gridsel"></select></div>
+    <div id="shapegrid" class="shapegrid"></div>
+    <div class="btnrow"><button type="button" id="gridmore" class="btn" hidden>More</button></div>
   </section>
 
   <section id="view-owner" class="view" aria-labelledby="owner-h" hidden>
@@ -187,30 +239,227 @@ function titleHTML(t){
   return m ? '<span class="composer">' + esc(m[1]) + "</span> – " + esc(m[2]) : esc(t);
 }
 function pageHref(p){ return String(p).split("/").map(encodeURIComponent).join("/"); }
+var P = window.kfPractice || null;
+var book = null;          /* songs/shapes.json: every shape in the songs, and each song's shapes */
+var SORT = "kf.sort";
+function sortMode(){ var v = ""; try { v = localStorage.getItem(SORT) || ""; } catch(e){} return /^(az|new|played)$/.test(v) ? v : "az"; }
+function songURLPath(s){ return new URL(pageHref(s.page), location.href).pathname; }
+function songShapes(id, prog){
+  var sh = book && book.songs[id]; if (!sh) return null;
+  var fresh = 0; sh.shapes.forEach(function(k){ if (!isKnown(k, prog)) fresh++; });
+  return {total: sh.shapes.length, fresh: fresh};
+}
+function playedLine(pl){
+  if (!pl) return "";
+  var t = "Played " + P.whenText(pl.last) + (pl.now >= 100 ? " at full speed" : " at " + pl.now + "%");
+  if (pl.first < pl.now) t += ", up from " + pl.first + "%";
+  if (pl.days > 1) t += " · " + pl.days + " days";
+  return t;
+}
 function renderLibrary(){
   if (!songs) return;
-  var list = songs.filter(function(s){ return s && s.page && s.title; }).slice()
-    .sort(function(a, b){ return String(a.title).localeCompare(String(b.title), undefined, {sensitivity: "base"}); });
+  var prog = shapeProg(), anyKnown = Object.keys(prog).some(function(k){ return isKnown(k, prog); });
+  var list = songs.filter(function(s){ return s && s.page && s.title; }).map(function(s){
+    return {s: s, sh: songShapes(s.id, prog), pl: P ? P.playedOf(songURLPath(s)) : null};
+  });
+  var mode = sortMode(), anyPlayed = list.some(function(x){ return x.pl; });
+  if (mode === "played" && !anyPlayed) mode = "az";
+  if (mode === "new" && !book) mode = "az";
+  var byTitle = function(a, b){ return String(a.s.title).localeCompare(String(b.s.title), undefined, {sensitivity: "base"}); };
+  list.sort(mode === "new" ? function(a, b){ return (a.sh ? a.sh.fresh : 1e9) - (b.sh ? b.sh.fresh : 1e9) || (a.sh ? a.sh.total : 0) - (b.sh ? b.sh.total : 0) || byTitle(a, b); }
+          : mode === "played" ? function(a, b){ return (b.pl ? b.pl.last : -1) - (a.pl ? a.pl.last : -1) || byTitle(a, b); }
+          : byTitle);
   var q = fold($("search").value.trim());
   $("searchwrap").hidden = list.length < 6;
-  var shown = q ? list.filter(function(s){ return fold(s.title).indexOf(q) >= 0; }) : list;
-  $("songlist").innerHTML = shown.map(function(s){
-    var meta = [s.key, "voice and piano"].filter(Boolean).join(" · ");
+  $("sortrow").hidden = list.length < 2;
+  $("sortrow").querySelector('[data-sort="new"]').hidden = !book;
+  $("sortrow").querySelector('[data-sort="played"]').hidden = !anyPlayed;
+  Array.prototype.forEach.call($("sortrow").querySelectorAll("button"), function(b){ b.setAttribute("aria-pressed", String(b.dataset.sort === mode)); });
+  var shown = q ? list.filter(function(x){ return fold(x.s.title).indexOf(q) >= 0; }) : list;
+  $("songlist").innerHTML = shown.map(function(x){
+    var s = x.s, shapes = "";
+    if (x.sh) shapes = x.sh.total + " shapes" + (!anyKnown ? "" : x.sh.fresh === 0 ? ", all known" : ", " + x.sh.fresh + " new");
+    var meta = [s.key, shapes || "voice and piano"].filter(Boolean).join(" · ");
+    var pl = playedLine(x.pl);
     return '<li><a class="song" href="' + esc(pageHref(s.page)) + '"><span class="song-title">' + titleHTML(String(s.title)) +
-      '</span><span class="song-meta">' + esc(meta) + "</span></a></li>";
+      '</span><span class="song-meta">' + esc(meta) + "</span>" + (pl ? '<span class="song-meta played">' + esc(pl) + "</span>" : "") + "</a></li>";
   }).join("");
   $("songlist").hidden = !shown.length;
   $("empty").hidden = list.length > 0;
   $("nomatch").hidden = !(list.length && !shown.length);
+  if (book && P){
+    var n = todaysQueue(learningSong()).length;
+    $("shapesdue").textContent = n ? n + " to play today" : "Nothing due today";
+    $("toshapes").hidden = false;
+  }
 }
 function loadSongs(){
-  return fetch("songs/index.json?v=" + Date.now(), {cache: "no-store"})
+  var a = fetch("songs/index.json?v=" + Date.now(), {cache: "no-store"})
     .then(function(r){ if (r.ok) return r.json(); if (r.status === 404) return {songs: []}; throw new Error(r.status); })
     .then(function(ix){ songs = Array.isArray(ix && ix.songs) ? ix.songs : []; $("libmsg").hidden = true; renderLibrary(); })
     .catch(function(){
       if (!songs){ var m = $("libmsg"); m.textContent = "The songs couldn't be reached. Try again in a moment."; m.hidden = false; }
     });
+  return Promise.all([a, loadBook()]);
 }
+function loadBook(){
+  if (book) return Promise.resolve(book);
+  return fetch("songs/shapes.json?v=" + Date.now(), {cache: "no-store"})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(b){ if (b && b.shapes && b.songs){ book = b; renderLibrary(); if (!$("view-shapes").hidden) renderShapes(); } return book; })
+    .catch(function(){ return null; });
+}
+
+/* ---------- The shape book ----------
+   Every shape from the songs, once. Each day a few come up by name; you play them, look, and say how it
+   went. A shape you get right comes back after a day, then three, a week, two weeks, a month, two months;
+   one that didn't come comes back at the end of today's round and again tomorrow. New shapes come from the
+   song you're learning, five a day, in the order the song plays them. All of it stays on this device. */
+var PROG = "kf.shapes", NEWDAY = "kf.newtoday", LEARN = "kf.learning", NEW_A_DAY = 5;
+var AFTER = [1, 1, 3, 7, 14, 30, 60];          /* days until a shape comes back, by how many times in a row it came */
+function shapeProg(){ return P ? P.getJSON(PROG, {}) : {}; }
+function isKnown(k, prog){ var x = prog[k]; return !!(x && x[0] >= 2); }
+function learningSong(){
+  if (!book) return "";
+  var v = ""; try { v = localStorage.getItem(LEARN) || ""; } catch(e){}
+  if (book.songs[v]) return v;
+  /* the song played last, or else the one with the fewest shapes */
+  var best = "", bestDay = -1, fewest = "", n = 1e9;
+  (songs || []).forEach(function(s){
+    if (!book.songs[s.id]) return;
+    var pl = P.playedOf(songURLPath(s)); if (pl && pl.last > bestDay){ bestDay = pl.last; best = s.id; }
+  });
+  Object.keys(book.songs).sort().forEach(function(id){ var c = book.songs[id].shapes.length; if (c < n){ n = c; fewest = id; } });
+  return best || fewest;
+}
+function newToday(){ var t = P.today(), x = P.getJSON(NEWDAY, [0, 0]); return x[0] === t ? x[1] : 0; }
+function todaysQueue(learn, extra){
+  var prog = shapeProg(), t = P.today(), due = [];
+  Object.keys(prog).forEach(function(k){ if (book.shapes[k] && prog[k][1] <= t) due.push(k); });
+  due.sort(function(a, b){ return prog[a][1] - prog[b][1] || prog[a][0] - prog[b][0]; });
+  var room = Math.max(0, NEW_A_DAY - newToday()) + (extra || 0), fresh = [];
+  if (learn && book.songs[learn]) book.songs[learn].shapes.forEach(function(k){ if (!prog[k] && fresh.length < room) fresh.push(k); });
+  return due.slice(0, 30).concat(fresh);
+}
+var drill = {queue: [], pos: 0, shown: false, again: {}};
+var hear = null;
+function playShape(k, prefer){
+  var sh = book.shapes[k]; if (!sh) return;
+  var at = sh["in"].filter(function(x){ return x[0] === prefer; })[0] || sh["in"][0];
+  var tr = book.songs[at[0]] && book.songs[at[0]].track; if (!tr) return;
+  if (!hear){ hear = new Audio(); hear.preload = "auto"; }
+  hear.pause();
+  hear.src = pageHref(tr) + "#t=" + at[3] + "," + at[4];
+  var stopAt = at[4];
+  hear.ontimeupdate = function(){ if (hear.currentTime >= stopAt) hear.pause(); };
+  var p = hear.play(); if (p && p.catch) p.catch(function(){});
+}
+function songTitle(id){ var s = (songs || []).filter(function(x){ return x.id === id; })[0]; return s ? String(s.title) : id; }
+function barText(n){ return /^\d+$/.test(String(n)) ? "bar " + n : String(n); }
+function shapeFrom(sh, prefer){ return sh["in"].filter(function(x){ return x[0] === prefer; })[0] || sh["in"][0]; }
+function tonesOf(sh){ var t = {}; sh.lh.concat(sh.rh).forEach(function(m, i){ t[m] = sh.t[i] || ""; }); return t; }
+function handNames(sh){
+  var l = sh.n.slice(0, sh.lh.length), r = sh.n.slice(sh.lh.length);
+  return (l.length ? "Left " + l.join(" ") : "") + (l.length && r.length ? " · " : "") + (r.length ? "Right " + r.join(" ") : "");
+}
+function renderDrill(){
+  var el = $("drill"), learn = $("learn").value;
+  if (drill.pos >= drill.queue.length){
+    var left = book.songs[learn] ? book.songs[learn].shapes.filter(function(k){ return !shapeProg()[k]; }).length : 0;
+    el.innerHTML = '<p class="drill-done">' + (drill.queue.length ? "That’s today’s shapes." : "Nothing to play today.") + "</p>" +
+      (left ? '<div class="btnrow"><button type="button" class="btn" id="drillmore">' + (left >= 3 ? "Three more" : left === 1 ? "One more" : "Two more") + " from " + esc(songTitle(learn)) + "</button></div>"
+            : (book.songs[learn] ? '<p class="small">Every shape in ' + esc(songTitle(learn)) + " is in your practice.</p>" : ""));
+    var more = $("drillmore");
+    if (more) more.addEventListener("click", function(){
+      var add = todaysQueue(learn, 3).filter(function(k){ return drill.queue.indexOf(k) < 0 && !shapeProg()[k]; }).slice(0, 3);
+      drill.queue = drill.queue.concat(add); renderDrill();
+    });
+    return;
+  }
+  var k = drill.queue[drill.pos], sh = book.shapes[k], prog = shapeProg(), at = shapeFrom(sh, learn);
+  var top = sh.n.length ? sh.n[sh.n.length - 1] : "";
+  var tag = !prog[k] ? "new" : drill.again[k] ? "again" : "";
+  el.innerHTML =
+    '<div class="drill-top"><span>' + (drill.pos + 1) + " of " + drill.queue.length + '</span><span class="tag">' + tag + "</span></div>" +
+    '<div class="drill-cn">' + esc(sh.c) + "</div>" +
+    '<div class="drill-form">' + esc(sh.f) + (top ? " · top note " + esc(top) : "") + "</div>" +
+    '<div class="drill-from"><a href="' + esc(pageHref("songs/" + at[0] + "/")) + "#bar-" + at[1] + '">' + esc(songTitle(at[0])) + ", " + esc(barText(at[2])) + "</a></div>" +
+    (drill.shown
+      ? '<div class="drill-keys">' + P.kb({lh: sh.lh, rh: sh.rh, tones: tonesOf(sh), minWhites: 12, label: sh.c}) + "</div>" +
+        '<div class="drill-names">' + esc(handNames(sh)) + "</div>" +
+        '<div class="btnrow"><button type="button" class="btn" id="drillhear">▶ Hear it</button></div>' +
+        '<div class="btnrow"><button type="button" class="btn link" id="drillno">Not yet</button><button type="button" class="btn primary" id="drillyes">Got it</button></div>'
+      : '<div class="btnrow"><button type="button" class="btn primary" id="drillshow">Show the keys</button></div>');
+  if (drill.shown){
+    $("drillhear").addEventListener("click", function(){ playShape(k, learn); });
+    $("drillyes").addEventListener("click", function(){ grade(k, true); });
+    $("drillno").addEventListener("click", function(){ grade(k, false); });
+    $("drillyes").focus({preventScroll: true});
+  } else {
+    $("drillshow").addEventListener("click", function(){ drill.shown = true; renderDrill(); playShape(k, learn); });
+  }
+}
+function grade(k, ok){
+  var prog = shapeProg(), t = P.today(), x = prog[k];
+  if (!x){ var nt = P.getJSON(NEWDAY, [0, 0]); P.put(NEWDAY, JSON.stringify([t, (nt[0] === t ? nt[1] : 0) + 1])); }
+  if (ok){
+    var box = Math.min(AFTER.length - 1, (x ? x[0] : 0) + 1);
+    if (drill.again[k]) box = 1;            /* right on the second try today: tomorrow, then on from there */
+    prog[k] = [box, t + AFTER[box]];
+  } else {
+    prog[k] = [0, t + 1];
+    if ((drill.again[k] || 0) < 2){ drill.again[k] = (drill.again[k] || 0) + 1; drill.queue.push(k); }
+  }
+  P.put(PROG, JSON.stringify(prog));
+  drill.pos++; drill.shown = false;
+  renderDrill(); renderLearnSum(); renderGrid();
+}
+function renderLearnSum(){
+  var learn = $("learn").value, sh = songShapes(learn, shapeProg());
+  $("learnsum").textContent = sh ? (sh.total - sh.fresh) + " of " + sh.total + " shapes known" : "";
+}
+var gridN = 0;
+function renderGrid(more){
+  var which = $("gridsel").value, prog = shapeProg(), keys;
+  if (which === "*"){
+    keys = Object.keys(book.shapes).sort(function(a, b){
+      return songsIn(book.shapes[b]) - songsIn(book.shapes[a]) || book.shapes[a].c.localeCompare(book.shapes[b].c); });
+  } else keys = (book.songs[which] && book.songs[which].shapes) || [];
+  gridN = more ? gridN + 60 : Math.max(60, which === "*" ? 60 : keys.length);
+  $("shapegrid").innerHTML = keys.slice(0, gridN).map(function(k){
+    var sh = book.shapes[k], x = prog[k], st = !x ? "new" : x[0] >= 2 ? "known" : "learning";
+    var ids = sh["in"].map(function(i){ return i[0]; }), others = ids.filter(function(i){ return i !== which; });
+    var inT = which === "*" ? (ids.length > 1 ? "in " + ids.length + " songs" : songTitle(ids[0]))
+            : others.length ? "also in " + (others.length === 1 ? songTitle(others[0]) : others.length + " other songs") : "";
+    return '<button type="button" class="shapecard ' + st + '" data-k="' + esc(k) + '"><span class="cn">' + esc(sh.c) + '</span><span class="fm">' + esc(sh.f) + "</span>" +
+      P.kb({lh: sh.lh, rh: sh.rh, tones: tonesOf(sh), minWhites: 10, label: sh.c}) + '<span class="in">' + esc(inT) + '</span><span class="st">' + st + "</span></button>";
+  }).join("");
+  $("gridmore").hidden = keys.length <= gridN;
+}
+function songsIn(sh){ return sh["in"].length; }
+function renderShapes(){
+  if (!book || !P){ $("drill").innerHTML = '<p class="small">The shapes are on their way.</p>'; return; }
+  P.style();
+  var learn = learningSong(), list = (songs || []).filter(function(s){ return book.songs[s.id]; })
+    .sort(function(a, b){ return String(a.title).localeCompare(String(b.title), undefined, {sensitivity: "base"}); });
+  if (!list.length) list = Object.keys(book.songs).map(function(id){ return {id: id, title: id}; });
+  $("learn").innerHTML = list.map(function(s){ return '<option value="' + esc(s.id) + '"' + (s.id === learn ? " selected" : "") + ">" + esc(s.title) + "</option>"; }).join("");
+  $("gridsel").innerHTML = '<option value="' + esc(learn) + '">In ' + esc(songTitle(learn)) + '</option><option value="*">In every song, the most used first</option>';
+  drill = {queue: todaysQueue(learn), pos: 0, shown: false, again: {}};
+  renderLearnSum(); renderDrill(); renderGrid();
+}
+$("learn").addEventListener("change", function(){
+  try { localStorage.setItem(LEARN, $("learn").value); } catch(e){}
+  renderShapes();
+});
+$("gridsel").addEventListener("change", function(){ renderGrid(); });
+$("gridmore").addEventListener("click", function(){ renderGrid(true); });
+$("shapegrid").addEventListener("click", function(e){ var b = e.target.closest(".shapecard"); if (b) playShape(b.dataset.k, $("gridsel").value); });
+$("sortrow").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-sort]"); if (!b) return;
+  try { localStorage.setItem(SORT, b.dataset.sort); } catch(e2){}
+  renderLibrary();
+});
 
 /* ---------- Owner page: the singer key ----------
    The same key as Fret Finder's, kept under the same name. Both sites live on lordfran28.github.io, so a
@@ -260,6 +509,8 @@ function takeConnect(h){
 function showView(v){
   $("view-library").hidden = v !== "library";
   $("view-owner").hidden = v !== "owner";
+  $("view-shapes").hidden = v !== "shapes";
+  if (v !== "shapes" && hear) hear.pause();
   window.scrollTo(0, 0);
 }
 function route(){
@@ -267,6 +518,15 @@ function route(){
   try { h = decodeURIComponent(h); } catch(e){}
   if (h.indexOf("connect=") === 0){ takeConnect(h); return; }
   if (h === "owner"){ msg(""); showView("owner"); renderVoice(); return; }
+  if (h === "shapes" || h.indexOf("shapes/") === 0){
+    var want = h.slice(7);
+    if (want){ try { localStorage.setItem(LEARN, want); } catch(e){} try { history.replaceState(null, "", location.pathname + location.search + "#shapes"); } catch(e){} }
+    showView("shapes"); renderShapes();
+    /* straight to the practice, past the painting */
+    setTimeout(function(){ var top = $("view-shapes").getBoundingClientRect().top + window.scrollY - 12; if (top > 0) window.scrollTo(0, top); }, 0);
+    if (!songs || !book) loadSongs().then(renderShapes);
+    return;
+  }
   showView("library"); renderLibrary(); loadSongs();
 }
 

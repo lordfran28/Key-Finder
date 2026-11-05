@@ -77,6 +77,10 @@ def main():
     html = html[:m.end()] + bar + html[m.end():] if m else bar + html
     # The singer's track, locked: playable only on the owner's devices.
     html = shelf_voice.mark_locked(shelf_voice.add_voice_script(html))
+    # Slower tracks for practising along: a row of speeds under every player, the pitch unchanged.
+    speed = '<script src="../../assets/speed.js" defer></script>'
+    html = html.replace(speed, "")
+    html = html.replace("</body>", speed + "</body>", 1) if "</body>" in html else html + speed
     with open(os.path.join(out, "index.html"), "w", encoding="utf-8") as f:
         f.write(html)
 

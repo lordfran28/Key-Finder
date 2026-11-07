@@ -4,8 +4,7 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "ochi-chyornye-piano.mp3",
-  "ochi-chyornye-voice.mp3.locked"
+  "ochi-chyornye-piano.mp3"
  ],
  "key": "A minor",
  "source": "https://claude.ai/artifact/Dtod3AhL34hbdMYfsuDcQG",

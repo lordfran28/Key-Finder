@@ -4,8 +4,7 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "it-keeps-you-runnin-piano.mp3",
-  "it-keeps-you-runnin-voice.mp3.locked"
+  "it-keeps-you-runnin-piano.mp3"
  ],
  "key": "F major",
  "source": "https://claude.ai/artifact/8C4CDBrJq9CNP47sdmbmZs",

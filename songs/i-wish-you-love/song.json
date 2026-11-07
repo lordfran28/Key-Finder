@@ -4,8 +4,7 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "i-wish-you-love-piano.mp3",
-  "i-wish-you-love-voice.mp3.locked"
+  "i-wish-you-love-piano.mp3"
  ],
  "key": "D♭ major",
  "source": "https://claude.ai/artifact/LwRpi6qtVjrNyw3Q6pKZM3",

@@ -4,8 +4,7 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "but-not-for-me-piano.mp3",
-  "but-not-for-me-voice.mp3.locked"
+  "but-not-for-me-piano.mp3"
  ],
  "key": "B♭ major",
  "source": "https://claude.ai/artifact/Et3rUJfVQxukan9xbpkZaN",

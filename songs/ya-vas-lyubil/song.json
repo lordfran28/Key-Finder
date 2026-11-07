@@ -4,8 +4,7 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "ya-vas-lyubil-piano.mp3",
-  "ya-vas-lyubil-voice.mp3.locked"
+  "ya-vas-lyubil-piano.mp3"
  ],
  "key": "G major",
  "source": "https://claude.ai/artifact/7Z9p2XX6TiXmub6vQkxUDp",

@@ -4,8 +4,7 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "misty-piano.mp3",
-  "misty-voice.mp3.locked"
+  "misty-piano.mp3"
  ],
  "key": "B major",
  "source": "https://claude.ai/artifact/N4AM8jZCR5tufb2WFAgDvf",

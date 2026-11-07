@@ -4,8 +4,7 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "barquito-de-papel-piano.mp3",
-  "barquito-de-papel-voice.mp3.locked"
+  "barquito-de-papel-piano.mp3"
  ],
  "key": "A major",
  "source": "https://claude.ai/artifact/41Ke1uXfPjvGgNGxdb4nAW",

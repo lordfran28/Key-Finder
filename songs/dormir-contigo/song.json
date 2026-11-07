@@ -4,8 +4,7 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "dormir-contigo-piano.mp3",
-  "dormir-contigo-voice.mp3.locked"
+  "dormir-contigo-piano.mp3"
  ],
  "key": "A major",
  "source": "https://claude.ai/artifact/PqbnioxyBcECrg7sgGQDQk",

@@ -4,9 +4,9 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "viva-la-vida-piano.mp3",
-  "viva-la-vida-voice.mp3.locked"
+  "viva-la-vida-piano.mp3"
  ],
  "key": "E major",
- "addedAt": "2026-11-04T22:18:16Z"
+ "addedAt": "2026-11-04T22:18:16Z",
+ "source": "https://claude.ai/artifact/3948g7GC9bnJUDxhy4NamV"
 }

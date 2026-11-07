@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "ive-never-been-in-love-before-piano.mp3"
+  "ive-never-been-in-love-before-piano.mp3",
+  "ive-never-been-in-love-before-voice.mp3.locked"
  ],
  "key": "A♭ major",
  "source": "https://claude.ai/artifact/PA5ZtDeeuHR1JiM8kjeeB9",

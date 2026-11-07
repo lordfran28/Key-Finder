@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "seria-fantastico-piano.mp3"
+  "seria-fantastico-piano.mp3",
+  "seria-fantastico-voice.mp3.locked"
  ],
  "key": "A major",
  "source": "https://claude.ai/artifact/9ngaXqjVvuoUwYW611g9ax",

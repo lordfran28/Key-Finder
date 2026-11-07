@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "no-me-platiques-mas-piano.mp3"
+  "no-me-platiques-mas-piano.mp3",
+  "no-me-platiques-mas-voice.mp3.locked"
  ],
  "key": "G major",
  "source": "https://claude.ai/artifact/CV3UTWqvY2TFkiqdmifch3",

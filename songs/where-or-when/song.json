@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "where-or-when-piano.mp3"
+  "where-or-when-piano.mp3",
+  "where-or-when-voice.mp3.locked"
  ],
  "key": "D major",
  "source": "https://claude.ai/artifact/4xSnXgbBPrH6hvFGfZGUm7",

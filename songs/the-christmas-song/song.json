@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "the-christmas-song-piano.mp3"
+  "the-christmas-song-piano.mp3",
+  "the-christmas-song-voice.mp3.locked"
  ],
  "key": "B♭ major",
  "source": "https://claude.ai/artifact/MgvWpLNf6gsyST6f5Un7zH",

@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "in-over-my-head-piano.mp3"
+  "in-over-my-head-piano.mp3",
+  "in-over-my-head-voice.mp3.locked"
  ],
  "key": "E major",
  "source": "https://claude.ai/artifact/QwWvtJjfrzE3RTfnZtRM6N",

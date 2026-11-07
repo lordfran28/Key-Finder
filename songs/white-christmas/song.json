@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "white-christmas-piano.mp3"
+  "white-christmas-piano.mp3",
+  "white-christmas-voice.mp3.locked"
  ],
  "key": "A major",
  "source": "https://claude.ai/artifact/Co2r35HDPKiTgdmCfS5Fyz",

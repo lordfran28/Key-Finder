@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "glinka-ya-pomnyu-piano.mp3"
+  "glinka-ya-pomnyu-piano.mp3",
+  "glinka-ya-pomnyu-voice.mp3.locked"
  ],
  "key": "E♭ major",
  "source": "https://claude.ai/artifact/YJ1nqyjFFETmyfsKdKjG16",

@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "i-cover-the-waterfront-piano.mp3"
+  "i-cover-the-waterfront-piano.mp3",
+  "i-cover-the-waterfront-voice.mp3.locked"
  ],
  "key": "E major",
  "source": "https://claude.ai/artifact/Vbmmcu3AE5EgetcHuRxr98",

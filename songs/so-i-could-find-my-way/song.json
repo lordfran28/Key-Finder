@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "so-i-could-find-my-way-piano.mp3"
+  "so-i-could-find-my-way-piano.mp3",
+  "so-i-could-find-my-way-voice.mp3.locked"
  ],
  "key": "A major",
  "source": "https://claude.ai/artifact/8zyE7XMxeH6dqbRKSadnXu",

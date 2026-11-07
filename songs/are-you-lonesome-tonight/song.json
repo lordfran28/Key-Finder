@@ -4,7 +4,8 @@
  "instrument": "piano",
  "files": [
   "index.html",
-  "are-you-lonesome-tonight-piano.mp3"
+  "are-you-lonesome-tonight-piano.mp3",
+  "are-you-lonesome-tonight-voice.mp3.locked"
  ],
  "key": "C major",
  "source": "https://claude.ai/artifact/FZTia6X1K3LYFfWMrf3inx",

@@ -10,6 +10,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='6' y='8' width='36' height='32' rx='2' fill='%23FBF8F1' stroke='%232D4A7F' stroke-width='2.5'/%3E%3Cpath d='M18 8v32M30 8v32' stroke='%232D4A7F' stroke-width='2'/%3E%3Crect x='14.5' y='8' width='7' height='19' fill='%232D4A7F'/%3E%3Crect x='26.5' y='8' width='7' height='19' fill='%232D4A7F'/%3E%3C/svg%3E">
 <link rel="preload" href="assets/fonts/eb-garamond-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/im-fell-french-canon-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<script src="assets/voice.js"></script>
 <script src="assets/practice.js"></script>
 <style>
 @font-face{font-family:"EB Garamond";font-style:normal;font-weight:400 800;font-display:swap;src:url("assets/fonts/eb-garamond-latin-wght-normal.woff2") format("woff2")}
@@ -515,6 +516,8 @@ function showView(v){
 function route(){
   var h = location.hash.replace(/^#/, "");
   try { h = decodeURIComponent(h); } catch(e){}
+  if (h.indexOf("connect=") === 0){ takeConnect(h); return; }
+  if (h === "owner"){ msg(""); showView("owner"); renderVoice(); return; }
   if (h === "shapes" || h.indexOf("shapes/") === 0){
     var want = h.slice(7);
     if (want){ try { localStorage.setItem(LEARN, want); } catch(e){} try { history.replaceState(null, "", location.pathname + location.search + "#shapes"); } catch(e){} }

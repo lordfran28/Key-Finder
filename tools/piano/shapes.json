@@ -1,0 +1,1318 @@
+{
+"1:maj7:1": {
+"name": "Dbmaj7",
+"lh": [
+37,
+48
+],
+"rh": [
+60,
+65,
+68
+],
+"form": "Shell + rootless",
+"occ": 32
+},
+"10:m7:10": {
+"name": "Bbm7",
+"lh": [
+46,
+56
+],
+"rh": [
+61,
+65,
+68
+],
+"form": "Shell + rootless",
+"occ": 78
+},
+"3:m7:3": {
+"name": "Ebm7",
+"lh": [
+39,
+49
+],
+"rh": [
+58,
+61,
+66
+],
+"form": "Shell + rootless",
+"occ": 83
+},
+"8:7:8": {
+"name": "Ab7",
+"lh": [
+44,
+54
+],
+"rh": [
+60,
+63,
+66
+],
+"form": "Shell + rootless",
+"occ": 102
+},
+"11:7:11": {
+"name": "Cb7",
+"lh": [
+47,
+57
+],
+"rh": [
+63,
+66,
+69
+],
+"form": "Shell + rootless",
+"occ": 101
+},
+"10:7:10": {
+"name": "Bb7",
+"lh": [
+46,
+56
+],
+"rh": [
+62,
+65,
+68
+],
+"form": "Shell + rootless",
+"occ": 174
+},
+"3:7:3": {
+"name": "Eb7",
+"lh": [
+39,
+49
+],
+"rh": [
+58,
+61,
+67
+],
+"form": "Shell + rootless",
+"occ": 79
+},
+"0:m7b5:0": {
+"name": "Cm7b5",
+"lh": [
+36,
+46
+],
+"rh": [
+58,
+63,
+66
+],
+"form": "Shell + rootless",
+"occ": 2
+},
+"5:7:5": {
+"name": "F7",
+"lh": [
+41,
+51
+],
+"rh": [
+60,
+63,
+69
+],
+"form": "Shell + rootless",
+"occ": 145
+},
+"1:7:1": {
+"name": "Db7",
+"lh": [
+37,
+47
+],
+"rh": [
+59,
+65,
+68
+],
+"form": "Shell + rootless",
+"occ": 66
+},
+"6:maj7:6": {
+"name": "Gbmaj7",
+"lh": [
+42,
+53
+],
+"rh": [
+61,
+65,
+70
+],
+"form": "Shell + rootless",
+"occ": 7
+},
+"11:maj7:11": {
+"name": "Bmaj7",
+"lh": [
+47,
+54
+],
+"rh": [
+58,
+63,
+66
+],
+"form": "Root and 5th + rootless",
+"occ": 15
+},
+"8:m7:8": {
+"name": "G#m7",
+"lh": [
+44,
+54
+],
+"rh": [
+59,
+63,
+66
+],
+"form": "Shell + rootless",
+"occ": 34
+},
+"1:m7:1": {
+"name": "C#m7",
+"lh": [
+49,
+56
+],
+"rh": [
+59,
+64,
+68
+],
+"form": "Root and 5th + rootless",
+"occ": 137
+},
+"6:7:6": {
+"name": "F#7",
+"lh": [
+42,
+52
+],
+"rh": [
+61,
+64,
+70
+],
+"form": "Shell + rootless",
+"occ": 93
+},
+"6:m7:6": {
+"name": "F#m7",
+"lh": [
+42,
+52
+],
+"rh": [
+61,
+64,
+69
+],
+"form": "Shell + rootless",
+"occ": 117
+},
+"4:maj7:4": {
+"name": "Emaj7",
+"lh": [
+40,
+51
+],
+"rh": [
+59,
+63,
+68
+],
+"form": "Shell + rootless",
+"occ": 19
+},
+"4:m7:4": {
+"name": "Em7",
+"lh": [
+40,
+50
+],
+"rh": [
+59,
+62,
+67
+],
+"form": "Shell + rootless",
+"occ": 85
+},
+"9:6:9": {
+"name": "A6",
+"lh": [
+45,
+52
+],
+"rh": [
+61,
+64,
+66
+],
+"form": "Root and 5th + rootless",
+"occ": 45
+},
+"5:m7:5": {
+"name": "Fm7",
+"lh": [
+41,
+51
+],
+"rh": [
+60,
+63,
+68
+],
+"form": "Shell + rootless",
+"occ": 62
+},
+"7:7:7": {
+"name": "G7",
+"lh": [
+43,
+53
+],
+"rh": [
+59,
+62,
+65
+],
+"form": "Shell + rootless",
+"occ": 130
+},
+"0:maj7:0": {
+"name": "Cmaj7",
+"lh": [
+36,
+47
+],
+"rh": [
+59,
+64,
+67
+],
+"form": "Shell + rootless",
+"occ": 48
+},
+"9:7:9": {
+"name": "A7",
+"lh": [
+45,
+55
+],
+"rh": [
+61,
+64,
+67
+],
+"form": "Shell + rootless",
+"occ": 149
+},
+"2:m7:2": {
+"name": "Dm7",
+"lh": [
+38,
+48
+],
+"rh": [
+60,
+65,
+69
+],
+"form": "Shell + rootless",
+"occ": 103
+},
+"4:7:4": {
+"name": "E7",
+"lh": [
+40,
+50
+],
+"rh": [
+59,
+62,
+68
+],
+"form": "Shell + rootless",
+"occ": 240
+},
+"9:m7:9": {
+"name": "Am7",
+"lh": [
+45,
+55
+],
+"rh": [
+60,
+64,
+67
+],
+"form": "Shell + rootless",
+"occ": 62
+},
+"5::5": {
+"name": "F",
+"lh": [
+41,
+48
+],
+"rh": [
+60,
+65,
+69
+],
+"form": "Root and 5th + triad",
+"occ": 13
+},
+"2:7:2": {
+"name": "D7",
+"lh": [
+38,
+48
+],
+"rh": [
+60,
+66,
+69
+],
+"form": "Shell + rootless",
+"occ": 111
+},
+"1:m7b5:1": {
+"name": "C#m7b5",
+"lh": [
+37,
+47
+],
+"rh": [
+59,
+64,
+67
+],
+"form": "Shell + rootless",
+"occ": 3
+},
+"5:6:5": {
+"name": "F6",
+"lh": [
+41,
+48
+],
+"rh": [
+60,
+62,
+69
+],
+"form": "Root and 5th + rootless",
+"occ": 30
+},
+"7:m7:7": {
+"name": "Gm7",
+"lh": [
+43,
+53
+],
+"rh": [
+62,
+65,
+70
+],
+"form": "Shell + rootless",
+"occ": 15
+},
+"0:7:0": {
+"name": "C7",
+"lh": [
+36,
+46
+],
+"rh": [
+58,
+64,
+67
+],
+"form": "Shell + rootless",
+"occ": 113
+},
+"9::9": {
+"name": "A",
+"lh": [
+45,
+52
+],
+"rh": [
+61,
+64,
+69
+],
+"form": "Root and 5th + triad",
+"occ": 118
+},
+"10::10": {
+"name": "Bb",
+"lh": [
+46,
+53
+],
+"rh": [
+62,
+65,
+70
+],
+"form": "Root and 5th + triad",
+"occ": 34
+},
+"0:6:0": {
+"name": "C6",
+"lh": [
+36,
+43
+],
+"rh": [
+57,
+64,
+67
+],
+"form": "Root and 5th + rootless",
+"occ": 4
+},
+"3:6:3": {
+"name": "Eb6",
+"lh": [
+39,
+46
+],
+"rh": [
+60,
+67,
+70
+],
+"form": "Root and 5th + rootless",
+"occ": 11
+},
+"2:6:2": {
+"name": "D6",
+"lh": [
+38,
+45
+],
+"rh": [
+59,
+66,
+69
+],
+"form": "Root and 5th + rootless",
+"occ": 54
+},
+"11:m7:11": {
+"name": "Bm7",
+"lh": [
+47,
+57
+],
+"rh": [
+62,
+66,
+69
+],
+"form": "Shell + rootless",
+"occ": 120
+},
+"4:6:4": {
+"name": "E6",
+"lh": [
+40,
+47
+],
+"rh": [
+59,
+61,
+68
+],
+"form": "Root and 5th + rootless",
+"occ": 19
+},
+"7:6:7": {
+"name": "G6",
+"lh": [
+43,
+50
+],
+"rh": [
+62,
+64,
+71
+],
+"form": "Root and 5th + rootless",
+"occ": 29
+},
+"7:m6:7": {
+"name": "Gm6",
+"lh": [
+43,
+50
+],
+"rh": [
+62,
+64,
+70
+],
+"form": "Root and 5th + rootless",
+"occ": 16
+},
+"1:6:1": {
+"name": "Db6",
+"lh": [
+37,
+44
+],
+"rh": [
+58,
+65,
+68
+],
+"form": "Root and 5th + rootless",
+"occ": 37
+},
+"6::6": {
+"name": "Gb",
+"lh": [
+42,
+49
+],
+"rh": [
+61,
+66,
+70
+],
+"form": "Root and 5th + triad",
+"occ": 9
+},
+"6:m6:6": {
+"name": "Gbm6",
+"lh": [
+42,
+49
+],
+"rh": [
+61,
+63,
+69
+],
+"form": "Root and 5th + rootless",
+"occ": 7
+},
+"5:m7b5:5": {
+"name": "Fm7b5",
+"lh": [
+41,
+51
+],
+"rh": [
+59,
+63,
+68
+],
+"form": "Shell + rootless",
+"occ": 2
+},
+"0::0": {
+"name": "C",
+"lh": [
+36,
+43
+],
+"rh": [
+60,
+64,
+67
+],
+"form": "Root and 5th + triad",
+"occ": 54
+},
+"6:m7b5:6": {
+"name": "F#m7b5",
+"lh": [
+42,
+52
+],
+"rh": [
+60,
+64,
+69
+],
+"form": "Shell + rootless",
+"occ": 11
+},
+"3:dim7:3": {
+"name": "D#dim7",
+"lh": [
+39,
+48
+],
+"rh": [
+60,
+66,
+69
+],
+"form": "Shell + rootless",
+"occ": 3
+},
+"11:m7b5:11": {
+"name": "Bm7b5",
+"lh": [
+47,
+57
+],
+"rh": [
+62,
+65,
+69
+],
+"form": "Shell + rootless",
+"occ": 8
+},
+"9:m6:9": {
+"name": "Am6",
+"lh": [
+45,
+52
+],
+"rh": [
+60,
+64,
+66
+],
+"form": "Root and 5th + rootless",
+"occ": 8
+},
+"11:6:11": {
+"name": "B6",
+"lh": [
+47,
+54
+],
+"rh": [
+63,
+66,
+68
+],
+"form": "Root and 5th + rootless",
+"occ": 12
+},
+"10:m:10": {
+"name": "Bbm",
+"lh": [
+46,
+53
+],
+"rh": [
+61,
+65,
+70
+],
+"form": "Root and 5th + triad",
+"occ": 7
+},
+"1::1": {
+"name": "Db",
+"lh": [
+49,
+56
+],
+"rh": [
+61,
+65,
+68
+],
+"form": "Root and 5th + triad",
+"occ": 4
+},
+"11:m:11": {
+"name": "Bm",
+"lh": [
+47,
+54
+],
+"rh": [
+59,
+62,
+66
+],
+"form": "Root and 5th + triad",
+"occ": 11
+},
+"2::2": {
+"name": "D",
+"lh": [
+38,
+45
+],
+"rh": [
+62,
+66,
+69
+],
+"form": "Root and 5th + triad",
+"occ": 55
+},
+"7:maj7:7": {
+"name": "Gmaj7",
+"lh": [
+43,
+54
+],
+"rh": [
+59,
+62,
+66
+],
+"form": "Shell + rootless",
+"occ": 13
+},
+"11::11": {
+"name": "B",
+"lh": [
+47,
+54
+],
+"rh": [
+59,
+63,
+66
+],
+"form": "Root and 5th + triad",
+"occ": 21
+},
+"8:6:8": {
+"name": "Ab6",
+"lh": [
+44,
+51
+],
+"rh": [
+60,
+63,
+65
+],
+"form": "Root and 5th + rootless",
+"occ": 30
+},
+"0:m7:0": {
+"name": "Cm7",
+"lh": [
+36,
+46
+],
+"rh": [
+58,
+63,
+67
+],
+"form": "Shell + rootless",
+"occ": 63
+},
+"5:maj7:5": {
+"name": "Fmaj7",
+"lh": [
+41,
+52
+],
+"rh": [
+60,
+64,
+69
+],
+"form": "Shell + rootless",
+"occ": 13
+},
+"2:m:2": {
+"name": "Dm",
+"lh": [
+38,
+45
+],
+"rh": [
+62,
+65,
+69
+],
+"form": "Root and 5th + triad",
+"occ": 18
+},
+"3:maj7:3": {
+"name": "Ebmaj7",
+"lh": [
+39,
+50
+],
+"rh": [
+58,
+62,
+67
+],
+"form": "Shell + rootless",
+"occ": 21
+},
+"10:m6:10": {
+"name": "Bbm6",
+"lh": [
+46,
+53
+],
+"rh": [
+61,
+65,
+67
+],
+"form": "Root and 5th + rootless",
+"occ": 2
+},
+"8:maj7:8": {
+"name": "Abmaj7",
+"lh": [
+44,
+55
+],
+"rh": [
+60,
+63,
+67
+],
+"form": "Shell + rootless",
+"occ": 18
+},
+"4:m6:4": {
+"name": "Em6",
+"lh": [
+40,
+47
+],
+"rh": [
+59,
+61,
+67
+],
+"form": "Root and 5th + rootless",
+"occ": 30
+},
+"10:6:10": {
+"name": "Bb6",
+"lh": [
+46,
+53
+],
+"rh": [
+62,
+65,
+67
+],
+"form": "Root and 5th + rootless",
+"occ": 23
+},
+"3:m:3": {
+"name": "Ebm",
+"lh": [
+39,
+46
+],
+"rh": [
+58,
+63,
+66
+],
+"form": "Root and 5th + triad",
+"occ": 12
+},
+"9:maj7:9": {
+"name": "Amaj7",
+"lh": [
+45,
+56
+],
+"rh": [
+61,
+64,
+68
+],
+"form": "Shell + rootless",
+"occ": 93
+},
+"2:maj7:2": {
+"name": "Dmaj7",
+"lh": [
+38,
+49
+],
+"rh": [
+61,
+66,
+69
+],
+"form": "Shell + rootless",
+"occ": 47
+},
+"2:m6:2": {
+"name": "Dm6",
+"lh": [
+38,
+45
+],
+"rh": [
+59,
+65,
+69
+],
+"form": "Root and 5th + rootless",
+"occ": 6
+},
+"3:m7b5:3": {
+"name": "D#m7b5",
+"lh": [
+39,
+49
+],
+"rh": [
+61,
+66,
+69
+],
+"form": "Shell + rootless",
+"occ": 6
+},
+"5:dim7:5": {
+"name": "Fdim7",
+"lh": [
+41,
+50
+],
+"rh": [
+59,
+62,
+68
+],
+"form": "Shell + rootless",
+"occ": 5
+},
+"8:m6:8": {
+"name": "Abm6",
+"lh": [
+44,
+51
+],
+"rh": [
+59,
+63,
+65
+],
+"form": "Root and 5th + rootless",
+"occ": 7
+},
+"3::3": {
+"name": "Eb",
+"lh": [
+39,
+46
+],
+"rh": [
+58,
+63,
+67
+],
+"form": "Root and 5th + triad",
+"occ": 37
+},
+"0:dim7:0": {
+"name": "Cdim7",
+"lh": [
+48,
+57
+],
+"rh": [
+63,
+66,
+69
+],
+"form": "Shell + rootless",
+"occ": 2
+},
+"4::4": {
+"name": "E",
+"lh": [
+40,
+47
+],
+"rh": [
+59,
+64,
+68
+],
+"form": "Root and 5th + triad",
+"occ": 174
+},
+"6:m:6": {
+"name": "F#m",
+"lh": [
+42,
+49
+],
+"rh": [
+61,
+66,
+69
+],
+"form": "Root and 5th + triad",
+"occ": 30
+},
+"11:dim7:11": {
+"name": "Bdim7",
+"lh": [
+47,
+56
+],
+"rh": [
+62,
+65,
+68
+],
+"form": "Shell + rootless",
+"occ": 31
+},
+"7::7": {
+"name": "G",
+"lh": [
+43,
+50
+],
+"rh": [
+59,
+62,
+67
+],
+"form": "Root and 5th + triad",
+"occ": 49
+},
+"0:m6:0": {
+"name": "Cm6",
+"lh": [
+36,
+43
+],
+"rh": [
+57,
+63,
+67
+],
+"form": "Root and 5th + rootless",
+"occ": 13
+},
+"2:sus4:2": {
+"name": "Dsus4",
+"lh": [
+38,
+45
+],
+"rh": [
+57,
+62,
+67
+],
+"form": "Root and 5th + triad",
+"occ": 4
+},
+"4:m:4": {
+"name": "Em",
+"lh": [
+40,
+47
+],
+"rh": [
+59,
+64,
+67
+],
+"form": "Root and 5th + triad",
+"occ": 21
+},
+"11:sus4:11": {
+"name": "Bsus4",
+"lh": [
+47,
+54
+],
+"rh": [
+59,
+64,
+66
+],
+"form": "Root and 5th + triad",
+"occ": 73
+},
+"8:m:8": {
+"name": "G#m",
+"lh": [
+44,
+51
+],
+"rh": [
+59,
+63,
+68
+],
+"form": "Root and 5th + triad",
+"occ": 2
+},
+"1:m:1": {
+"name": "C#m",
+"lh": [
+49,
+56
+],
+"rh": [
+61,
+64,
+68
+],
+"form": "Root and 5th + triad",
+"occ": 5
+},
+"4:sus4:4": {
+"name": "Esus4",
+"lh": [
+40,
+47
+],
+"rh": [
+59,
+64,
+69
+],
+"form": "Root and 5th + triad",
+"occ": 21
+},
+"11:7sus4:11": {
+"name": "B7sus4",
+"lh": [
+47,
+54
+],
+"rh": [
+57,
+64,
+66
+],
+"form": "Root and 5th + rootless",
+"occ": 5
+},
+"6:7sus4:6": {
+"name": "F#7sus4",
+"lh": [
+42,
+52
+],
+"rh": [
+61,
+64,
+71
+],
+"form": "Shell + rootless",
+"occ": 5
+},
+"5:m6:5": {
+"name": "Fm6",
+"lh": [
+41,
+48
+],
+"rh": [
+60,
+62,
+68
+],
+"form": "Root and 5th + rootless",
+"occ": 3
+},
+"7:7sus4:7": {
+"name": "G7sus4",
+"lh": [
+43,
+53
+],
+"rh": [
+60,
+62,
+65
+],
+"form": "Shell + rootless",
+"occ": 2
+},
+"5:m:5": {
+"name": "Fm",
+"lh": [
+41,
+48
+],
+"rh": [
+60,
+65,
+68
+],
+"form": "Root and 5th + triad",
+"occ": 11
+},
+"7:m:7": {
+"name": "Gm",
+"lh": [
+43,
+50
+],
+"rh": [
+58,
+62,
+67
+],
+"form": "Root and 5th + triad",
+"occ": 7
+},
+"8::8": {
+"name": "Ab",
+"lh": [
+44,
+51
+],
+"rh": [
+60,
+63,
+68
+],
+"form": "Root and 5th + triad",
+"occ": 4
+},
+"9:m:9": {
+"name": "Am",
+"lh": [
+45,
+52
+],
+"rh": [
+60,
+64,
+69
+],
+"form": "Root and 5th + triad",
+"occ": 52
+}
+}

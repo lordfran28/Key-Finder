@@ -31,6 +31,11 @@ These come from his own corrections over many arrangements (on guitar, piano and
 - A diagram means a change, so never repeat one. A voicing that keeps going gets one diagram; the bars after it show none. A voicing that comes back after a different one is drawn again in full; never replace it with a name like "back to Dm9". Each part opens with its own diagrams.
 - Only runs and scales get numbers (the order they're played in).
 
+**For a beginner** (his words: not 120 chords a song, or 50, or even 20)
+- The song's own chords, played plainly, and few of them: about twelve at most (a few more where the song changes key). Passing chords and colours are left out.
+- One shape per chord, the same every time it comes back, and the same in every song: E7 is always the same keys. Repetition is how he learns.
+- Root, shell and rootless sound; nothing atonal or crowded.
+
 **Arranging**
 - Never stuffed. Add a run, an inner line or an extra chord only where it's truly beautiful.
 - Never simplify. Don't drop or thin a part on the assumption it's too hard; don't assume what he can or can't play. Write the real part.
@@ -87,9 +92,9 @@ The same rules as Fret Finder.
 - **Write commit messages for the player.** Say in plain words what changed for him, not which function moved.
 - Each site is its own repository. Don't change Fret Finder or Valve Finder from here.
 
-## Where it stands (5 November 2026)
+## Where it stands (8 November 2026)
 
 - Built: the library, the owner page, the song-page look, the import tool and the song-list workflow; slower tracks; the music stand, the shape book and the library's progress (5 November).
-- 39 songs, built with the tools in `tools/piano/` (see its README).
+- 40 songs, built with the tools in `tools/piano/` (see its README). On 8 November every song was rearranged for a beginner: 5 to 15 chords a song (most 12), one shape per chord across the shelf, 106 shapes in the shape book instead of 684. The singer's tracks were rebuilt over the new piano.
 - The look now matches the sister sites (see Look and paintings).
 - Live at https://lordfran28.github.io/Key-Finder/ (repository lordfran28/Key-Finder, Pages from `main`, root).

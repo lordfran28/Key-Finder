@@ -1,9 +1,9 @@
 #!/bin/bash
-# Put every built piano page in keys/out onto the Key Finder shelf.
+# Put every built piano page in tools/piano/out onto the Key Finder shelf.
 set -e
 cd /home/claude/key-finder
 for slug in "$@"; do
-  d=/home/claude/keys/out/$slug/
+  d=/home/claude/key-finder/tools/piano/out/$slug/
   [ -f "$d/meta.json" ] && [ -f "$d/index.html" ] || continue
   python3 - "$d" "$slug" <<'EOF' > /tmp/kf_args.$$
 import json, sys, os

@@ -43,6 +43,7 @@ SONGS = {
  'cloudy': ('Cloudy', 'cand2/cloudy', 'cand2/cloudy/cloudy-voice.mp3', 'cand2/cloudy/cloudy-guitar.mp3', False, 'https://claude.ai/artifact/L26FbKBMXk5PMciNapffRy'),
  'glinka-ya-pomnyu': ('Glinka – Я помню чудное мгновенье', 'imp/irm', 'imp/irm/irm-voice.mp3', FF + '/glinka-ya-pomnyu/irm-guitar.mp3', True, 'https://claude.ai/artifact/YJ1nqyjFFETmyfsKdKjG16'),
  'you-dont-mess-around-with-jim': ('You Don’t Mess Around with Jim', 'imp/jim', 'imp/jim/jim-voice.mp3', FF + '/you-dont-mess-around-with-jim/jim-guitar.mp3', False, 'https://claude.ai/artifact/64rNZEHDwajoH9L7h8ZSu1'),
+ 'viva-la-vida': ('Viva la Vida', FF + '/viva-la-vida', None, None, False, 'https://claude.ai/artifact/3948g7GC9bnJUDxhy4NamV'),
  'ochi-chyornye': ('Очи чёрные (Dark Eyes)', FF + '/ochi-chyornye', 'oci-voice.mp3', 'oci-guitar.mp3', True, 'https://claude.ai/artifact/Dtod3AhL34hbdMYfsuDcQG'),
 }
 
@@ -135,7 +136,7 @@ def chart(slug):
     title, page, vmix, gtr, free, src = SONGS[slug]
     ff = os.path.join(FF, slug, 'index.html')
     if os.path.exists(ff): path = ff
-    elif slug == 'are-you-lonesome-tonight': path = os.path.join(HERE_SP, 'imp/lonesome/index.html')
+    elif slug == 'are-you-lonesome-tonight': path = os.path.join(SP, 'imp/lonesome/index.html')
     else: path = None
     C = None
     if path:

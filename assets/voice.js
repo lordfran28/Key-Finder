@@ -24,11 +24,24 @@
   var S = window.crypto && window.crypto.subtle, INFO = new TextEncoder().encode("fret-finder voice");
   var pubP = null, cache = {};
   function pub() { return pubP || (pubP = fetch(base + "voice-key.json").then(function (r) { return r.json(); })); }
+  /* The key can be a word (the owner's is a short word): it becomes the private key through PBKDF2. */
+  var dMemo = {};
+  function toD(w) {
+    w = String(w || "").replace(/\s+/g, "");
+    if (/^[A-Za-z0-9_-]{43}$/.test(w)) return Promise.resolve(w);
+    w = w.toLowerCase();
+    if (dMemo[w]) return dMemo[w];
+    var te = new TextEncoder();
+    return (dMemo[w] = S.importKey("raw", te.encode(w), "PBKDF2", false, ["deriveBits"])
+      .then(function (k) { return S.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: te.encode("fret-finder voice key"), iterations: 100000 }, k, 256); })
+      .then(function (b) { var s = ""; new Uint8Array(b).forEach(function (c) { s += String.fromCharCode(c); }); return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }));
+  }
   function open(buf, d) {
     var u = new Uint8Array(buf);
     if (u.length < 82 || String.fromCharCode(u[0], u[1], u[2], u[3]) !== "FFV1") return Promise.reject(new Error("not a locked file"));
     var epk = u.slice(4, 69), iv = u.slice(69, 81), ct = u.slice(81);
-    return pub().then(function (p) {
+    return Promise.all([pub(), toD(d)]).then(function (pd) {
+      var p = pd[0], d = pd[1];
       return Promise.all([
         S.importKey("jwk", { kty: "EC", crv: "P-256", x: p.x, y: p.y, d: d, ext: true }, { name: "ECDH", namedCurve: "P-256" }, false, ["deriveBits"]),
         S.importKey("raw", epk, { name: "ECDH", namedCurve: "P-256" }, false, [])

@@ -82,7 +82,7 @@
         if (new TextDecoder().decode(pt) !== "ok") throw new Error("wrong");
       }).catch(function () {
         try { localStorage.removeItem(KEY); } catch (e) {}
-        has = false; root.classList.remove("ff-voice"); cache = {};
+        has = false; root.classList.remove("ff-voice"); cache = {}; keyRow();
       });
     }, function () {});
   }
@@ -142,9 +142,38 @@
     var as = document.querySelectorAll("audio[src$='.locked']");
     for (var k = 0; k < as.length; k++) { var s = as[k].getAttribute("src"); as[k].removeAttribute("src"); as[k].src = s; }
   }
+  /* ---------- the key box beside the tracks, where there are singer tracks and no key yet ---------- */
+  var row = null;
+  function keyRow() {
+    if (has || row || !S) return;
+    var b = document.querySelector("[data-locked]");
+    var g = b && b.parentElement; if (!g || !g.parentNode) return;
+    row = document.createElement("div"); row.className = "ff-keyrow";
+    row.style.cssText = "display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 4px;font-size:15px";
+    var inp = document.createElement("input");
+    inp.type = "password"; inp.placeholder = "Singer key"; inp.autocomplete = "current-password"; inp.setAttribute("aria-label", "Singer key");
+    inp.style.cssText = "font:inherit;width:9em;padding:7px 10px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;opacity:.85";
+    var go = document.createElement("button"); go.type = "button"; go.textContent = "Open the singer's tracks";
+    go.style.cssText = "font:inherit;padding:7px 12px;border:1px solid currentColor;border-radius:6px;background:transparent;color:inherit;cursor:pointer";
+    var msg = document.createElement("span"); msg.style.cssText = "opacity:.75";
+    function tryKey() {
+      var v = inp.value.replace(/\s+/g, ""); if (!v) return;
+      go.disabled = true; msg.textContent = "Checking…";
+      window.ffVoice.test(v).then(function (ok) {
+        go.disabled = false;
+        if (!ok) { msg.textContent = "That isn't the key."; return; }
+        try { localStorage.setItem(KEY, v); } catch (e) {}
+        msg.textContent = "Saved."; location.reload();
+      });
+    }
+    go.addEventListener("click", tryKey);
+    inp.addEventListener("keydown", function (e) { if (e.key === "Enter") tryKey(); });
+    row.appendChild(inp); row.appendChild(go); row.appendChild(msg);
+    g.parentNode.insertBefore(row, g.nextSibling);
+  }
   function start() {
-    tidy();
-    if (window.MutationObserver) new MutationObserver(function () { tidy(); }).observe(document.body, { childList: true, subtree: true });
+    tidy(); keyRow();
+    if (window.MutationObserver) new MutationObserver(function () { tidy(); keyRow(); }).observe(document.body, { childList: true, subtree: true });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();

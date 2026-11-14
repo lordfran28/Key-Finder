@@ -293,6 +293,7 @@ OVERRIDE = {
 # whole bars by hand: {bar label: [chord for each half bar]}
 OVERRIDE_BARS = {
  'the-christmas-song': {'1': ['Bb6', 'Bb6'], '2': ['Cm7', 'F7']},      # the intro on the home chord, then ii–V into it
+ 'i-wonder-whos-kissing-her-now': {'1.24': ['Fm6', 'Fm6'], '2.24': ['Fm6', 'Fm6']},   # Dean holds D on "won-der if": Fm6 has it, Fm7's E♭ rubs
 }
 
 def override(slug, S, C=None):

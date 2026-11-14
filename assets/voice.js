@@ -73,6 +73,20 @@
     unlock: unlock
   };
 
+  /* A saved key that no longer opens the test file (an old key) is thrown out, so the owner page asks again.
+     Only when the file was fetched and would not open: being offline never removes a key. */
+  if (has && S) {
+    fetch(base + "voice-check.locked", { cache: "no-store" }).then(function (r) {
+      if (!r.ok) return;
+      return r.arrayBuffer().then(function (b) { return open(b, key()); }).then(function (pt) {
+        if (new TextDecoder().decode(pt) !== "ok") throw new Error("wrong");
+      }).catch(function () {
+        try { localStorage.removeItem(KEY); } catch (e) {}
+        has = false; root.classList.remove("ff-voice"); cache = {};
+      });
+    }, function () {});
+  }
+
   /* ---------- audio elements take ".locked" sources ---------- */
   var M = window.HTMLMediaElement && HTMLMediaElement.prototype;
   if (!M) return;

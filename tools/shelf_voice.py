@@ -45,4 +45,7 @@ def mark_locked(html):
 def lock(src, dst):
     if not dst.endswith(".locked"):
         raise ValueError("a locked file's name ends in .locked")
+    with open(src, "rb") as f:
+        if f.read(4) == b"FFV1":   # already locked: locking it again would make it unplayable with the key
+            raise ValueError("%s is already locked; give the plain mp3" % src)
     subprocess.run(["node", os.path.join(HERE, "lock_voice.mjs"), src, dst], check=True, stdout=subprocess.DEVNULL)

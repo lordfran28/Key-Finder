@@ -294,6 +294,9 @@ OVERRIDE = {
 OVERRIDE_BARS = {
  'the-christmas-song': {'1': ['Bb6', 'Bb6'], '2': ['Cm7', 'F7']},      # the intro on the home chord, then ii–V into it
  'i-wonder-whos-kissing-her-now': {'1.24': ['Fm6', 'Fm6'], '2.24': ['Fm6', 'Fm6']},   # Dean holds D on "won-der if": Fm6 has it, Fm7's E♭ rubs
+ # 17 Nov: he holds C♯ over D minor (D minor major 7 on the guitar page), and D over E♭ minor after the key change: the
+ # minor 7th the beginner chart had put there (C, D♭) sat a half step from his note. The plain minor chord has no 7th.
+ 'cloudy': {'18': ['D#m7', 'Dm'], '34': ['D#m7', 'Dm'], '56': ['Em', 'Ebm'], '64': ['Em', 'Ebm']},
 }
 
 def override(slug, S, C=None):

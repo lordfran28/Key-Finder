@@ -23,7 +23,7 @@
   /* ---------- unlocking ---------- */
   var S = window.crypto && window.crypto.subtle, INFO = new TextEncoder().encode("fret-finder voice");
   var pubP = null, cache = {};
-  function pub() { return pubP || (pubP = fetch(base + "voice-key.json").then(function (r) { return r.json(); })); }
+  function pub() { return pubP || (pubP = fetch(base + "voice-key.json").then(function (r) { return r.json(); }).catch(function (e) { pubP = null; throw e; })); }
   /* The key can be a word (the owner's is a short word): it becomes the private key through PBKDF2. */
   var dMemo = {};
   function toD(w) {
@@ -74,13 +74,16 @@
   };
 
   /* A saved key that no longer opens the test file (an old key) is thrown out, so the owner page asks again.
-     Only when the file was fetched and would not open: being offline never removes a key. */
+     Only when both files were fetched and the test file would not open with the key: being offline, or leaving the
+     page while a file is still on its way (a song page that goes straight on to its locked copy), never removes it. */
   if (has && S) {
-    fetch(base + "voice-check.locked", { cache: "no-store" }).then(function (r) {
+    Promise.all([fetch(base + "voice-check.locked", { cache: "no-store" }), pub()]).then(function (rs) {
+      var r = rs[0];
       if (!r.ok) return;
       return r.arrayBuffer().then(function (b) { return open(b, key()); }).then(function (pt) {
         if (new TextDecoder().decode(pt) !== "ok") throw new Error("wrong");
-      }).catch(function () {
+      }).catch(function (e) {
+        if (e && (e.name === "TypeError" || e.name === "AbortError")) return;
         try { localStorage.removeItem(KEY); } catch (e) {}
         has = false; root.classList.remove("ff-voice"); cache = {}; keyRow();
       });
